@@ -1,0 +1,164 @@
+/*Κούρος Γεώργιος 3190095
+  Κατσάμης Κωνσταντίνος 3190237
+  Ανδρινόπουλος Κωνσταντίνος 3190009
+*/
+
+Package minipython;
+
+Helpers
+	digit = ['0' .. '9'];
+	letter = ['a' .. 'z']|['A' .. 'Z']; 
+	cr = 13; 
+	lf = 10;
+	all = [0..127]; 
+	eol = lf | cr | cr lf;
+	not_eol = [all - [cr + lf]];
+	d_quote = '"';
+	s_quote = ''';
+
+Tokens
+	tab = 9;
+	plus = '+';
+    plus_plus = '++';
+    minus_minus = '--';
+	minus = '-';
+	mult = '*';
+	mult_mult = '**';
+	div = '/';
+    mod = '%';
+	eq = '=';
+    self_minus = '-=';
+    self_divide = '/=';
+    type = 'type';
+	def = 'def';
+	l_par = '(';
+	r_par = ')';
+	l_br = '[';
+	r_br = ']';
+	comma=',';
+	if = 'if';
+	while = 'while';
+    for = 'for';
+    in = 'in';
+	print = 'print';
+	return = 'return';
+	less = '<';
+	great = '>';
+    great_eq = '>=';
+    less_eq = '<=';
+    eq_eq = '==';
+    not_eq = '!=';
+	true = 'true';
+	semi = ':';
+	false = 'false';
+	blank = (' ' | lf | cr);
+	line_comment = '#' not_eol* eol; 
+    dot = '.';
+	number = digit+ | (digit+ '.' digit+);
+	string = '"'not_eol* '"';
+    assert = 'assert';
+    max = 'max';
+    min = 'min';
+    and = 'and';
+    or = 'or';
+	none = 'None';
+    not = 'not';
+	integer_literal = digit+ | (digit+ '.' digit+);
+	identifier = letter (letter | digit | '_')*;
+	string_literal = d_quote [not_eol - d_quote]* d_quote | s_quote [not_eol - s_quote]* s_quote;
+
+Ignored Tokens
+	blank, line_comment;
+
+Productions
+
+    goal = command*;
+
+    command = {func} function | {statement} statement;
+
+	function = def identifier l_par argument? r_par semi statement;
+
+    argument = identifier assign_value? comma_id_assign_value*;
+
+    comma_id_assign_value = comma identifier assign_value?;
+  
+    assign_value = eq value;
+  
+    statement = {if}tab* if comparison semi statement|
+                {while}tab* while comparison semi statement|
+                {for}tab* for [id1]: identifier in [id2]: identifier semi statement|
+                {return}tab* return expression|
+                {print}tab* print expression comma_expression*|
+				{eq}tab* identifier eq expression|
+                {s_minus}tab* identifier self_minus expression|
+				{minus_minus}tab* identifier minus_minus expression|
+                {self_divide}tab* identifier self_divide expression|
+                {assign_list}tab* identifier l_br [ex1]: expression r_br eq [ex2]: expression|
+			    {assert}tab* assert expression comma_expression?|
+                {func_call}tab* function_call;
+	
+	expression = sum;
+
+	sum = {sum} sum plus term |
+			{minus} sum minus term |
+			{plus_plus} expression plus_plus|
+			{minus_minus} expression minus_minus|
+			{term} term;
+	
+	term = {mult} term mult power |
+			{div} term div power |
+			{modulo} term mod power |
+			{power} power;
+	
+	power = {exp} power mult_mult subscription |
+			{subscription} subscription;
+	
+	subscription = {subscription} identifier l_br expression r_br |
+			{func} func;
+	
+	func = {type} type l_par identifier r_par |
+	   {max} max l_par value comma_value+ r_par |
+	   {min} min l_par value comma_value+ r_par |
+	   {func} function_call |
+	   {par} par;
+
+	par = {par} l_par expression r_par |
+	  	{something} something ;
+	
+	something = {value} value |
+		{identifier} identifier;
+
+	comparison = seperation;
+
+	seperation = {or} seperation or conjuction |
+			{and} conjuction;
+	
+	conjuction = {and} conjuction and refusal |
+		 {not} refusal;
+
+	refusal = {refusal} not clause |
+			{clause} clause;
+
+    clause = {great} [exp1]: expression great [exp2]: expression|
+	     	 {less} [exp1]: expression less [exp2]: expression |
+	   	     {less_eq} [exp1]: expression less_eq [exp2]: expression |
+	    	 {great_eq} [exp1]: expression great_eq [exp2]: expression |
+	    	 {not_eq} [exp1]: expression not_eq [exp2]: expression |
+	     	 {eq} [exp1]: expression eq_eq [exp2]: expression |
+	   	  	 {true} true |
+			 {false} false;
+
+	/* sto bnf etsi ta zhtaei */
+	value = {fun_call} identifier dot function_call |
+			{str_call} string_literal |
+			{none} none |
+			{num} number |
+            {str} string;
+
+    function_call = identifier l_par arglist? r_par;
+
+    arglist = expression comma_expression*;
+
+    comma_expression = comma expression;
+
+	comma_value = comma value;
