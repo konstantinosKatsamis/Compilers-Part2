@@ -81,55 +81,43 @@ Productions
 
     argument = identifier assign_value? comma_id_assign_value* {-> New argument(identifier, assign_value) };
 
-    comma_id_assign_value = comma identifier assign_value?;
+    comma_id_assign_value = comma identifier assign_value?; /* TODO */
   
-    assign_value = eq value;
+    assign_value = eq value; /* TODO */
   
-    statement = {if}tab* if comparison semi statement
-				{-> New statement.if(comparison, statement)} |
-                {while}tab* while comparison semi statement
-				{-> New statement.while(comparison, statement)}|
-                {for}tab* for [id1]: identifier in [id2]: identifier semi statement
-				{-> New statement.for(id1, id2, statement)}|
-                {return}tab* return expression
-				{-> New statement.return(expression)}|
-                {print}tab* print expression comma_expression*
-				{-> New stamenent.print()}|
-				{eq}tab* identifier eq expression
-				{-> New statement.eq(identifier, expression)}|
-                {s_minus}tab* identifier self_minus expression
-				{-> New statement.s_minus(identifier, expression) }|
-				{minus_minus}tab* identifier minus_minus expression 
-				{-> New statement.minus_minus(identifier, expression) }|
-                {self_divide}tab* identifier self_divide expression 
-				{-> New statement.self_divide(identifier, expression)}|
-                {assign_list}tab* identifier l_br [ex1]: expression r_br eq [ex2]: expression
-				{-> New stamenent.assign_list(identifier, ex1, ex2)}|
-			    {assert}tab* assert expression comma_expression?
-				{-> New statement.assert()}|
-                {func_call}tab* function_call
-				{-> New statement.fun_call(function_call)};
+    statement = {if}tab* if comparison semi statement {-> New statement.if(comparison, statement)} |
+                {while}tab* while comparison semi statement {-> New statement.while(comparison, statement)} |
+                {for}tab* for [id1]: identifier in [id2]: identifier semi statement {-> New statement.for(id1, id2, statement)} |
+                {return}tab* return expression {-> New statement.return(expression)} |
+                {print}tab* print expression comma_expression* {-> New stamenent.print()} | /* TODO */
+				{eq}tab* identifier eq expression {-> New statement.eq(identifier, expression)} |
+                {s_minus}tab* identifier self_minus expression {-> New statement.s_minus(identifier, expression)} |
+				{minus_minus}tab* identifier minus_minus expression {-> New statement.minus_minus(identifier, expression)} |
+                {self_divide}tab* identifier self_divide expression {-> New statement.self_divide(identifier, expression)} |
+                {assign_list}tab* identifier l_br [ex1]: expression r_br eq [ex2]: expression {-> New stamenent.assign_list(identifier, ex1, ex2)} |
+			    {assert}tab* assert expression comma_expression? {-> New statement.assert()} | /* TODO */
+                {func_call}tab* function_call {-> New statement.fun_call(function_call)};
 	
-	expression = sum;
+	expression = sum{-> New sum.expression};
 
-	sum = {sum} sum plus term |
-			{minus} sum minus term |
-			{plus_plus} expression plus_plus|
-			{minus_minus} expression minus_minus|
-			{term} term;
+	sum{->expression} = {sum} sum plus term{-> New expression.arithmetic(sum.expression, New binop.plus(plus), term.expression)} |
+			{minus} sum minus term{-> New expression.arithmetic(sum.expression, New binop.minus(minus), term.expression)} |
+			{plus_plus} expression plus_plus{-> New expression.arithmetic(sum.expression, New binop.plus_plus(plus_plus))} |
+			{minus_minus} expression minus_minus{-> New expression.arithmetic(sum.expression, New binop.minus_minus(minus_minus))} |
+			{term} term{-> term.expression};
 	
-	term = {mult} term mult power |
-			{div} term div power |
-			{modulo} term mod power |
-			{power} power;
+	term{-> expression} = {mult} term mult power{-> New expression.arithmetic(term.expression, New binop.mult(mult), power.expression)} |
+			{div} term div power{-> New expression.arithmetic(term.expression, New binop.div(div), power.expression)} |
+			{modulo} term mod power{-> New expression.arithmetic(term.expression, New binop.modulo(mod), power.expression)} |
+			{power} power{-> power.expression};
 	
-	power = {exp} power mult_mult subscription |
-			{subscription} subscription;
+	power{-> expression} = {exp} power mult_mult subscription{-> New expression.arithmetic(power.expression, New binop.pow(mult_mult), subscription.expression)} |
+			{subscription} subscription{-> subscription.expression};
 	
-	subscription = {subscription} identifier l_br expression r_br |
-			{func} func;
+	subscription = {subscription} identifier l_br expression r_br{New expression.subscription(identifier, expression)} |
+			{func} func{-> func.expression};
 	
-	func = {type} type l_par identifier r_par |
+	func{-> expression} = {type} type l_par identifier r_par |
 	   {max} max l_par value comma_value+ r_par |
 	   {min} min l_par value comma_value+ r_par |
 	   {func} function_call |
@@ -161,7 +149,6 @@ Productions
 	   	  	 {true} true |
 			 {false} false;
 
-	/* sto bnf etsi ta zhtaei */
 	value = {fun_call} identifier dot function_call |
 			{str_call} string_literal |
 			{none} none |
@@ -175,3 +162,63 @@ Productions
     comma_expression = comma expression;
 
 	comma_value = comma value;
+
+Abstract Syntax Tree
+	goal = command*;
+
+	command = {func} function | {statement} statement ;
+
+	function = 
+
+	argument = 
+
+	comma_id_assign_value = 
+
+	assign_value = 
+
+	statement = 
+
+	expression = {arithmetic} [e1]:expression binop [e2]:expression |
+			/* TODO */
+			;
+
+	binop = {plus} plus |
+            {minus} minus |
+            {mult} mult |
+            {div} div |
+            {modulo} mode |
+            {pow} mult_mult;
+
+	sum =
+
+	term =
+
+	power =
+
+	subscription =
+
+	func =
+
+	par =
+
+	something =
+
+	comparison =
+
+	seperation =
+
+	conjuction =
+
+	refusal =
+
+	clause =
+
+	value =
+
+	function_call =
+
+	arglist =
+
+	comma_expression =
+
+	comma_value =
