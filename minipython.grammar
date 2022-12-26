@@ -72,30 +72,43 @@ Ignored Tokens
 
 Productions
 
-    goal = command*;
+    goal = command*{-> New goal([command])};
+	
+	command = {func} function{-> New command.funct(function)} |
+              {statement} statement{-> New command.statement(statement)};
 
-    command = {func} function | {statement} statement;
+	function = def identifier l_par argument? r_par semi statement {-> New function(identifier, argument, statement) };
 
-	function = def identifier l_par argument? r_par semi statement;
-
-    argument = identifier assign_value? comma_id_assign_value*;
+    argument = identifier assign_value? comma_id_assign_value* {-> New argument(identifier, assign_value) };
 
     comma_id_assign_value = comma identifier assign_value?;
   
     assign_value = eq value;
   
-    statement = {if}tab* if comparison semi statement|
-                {while}tab* while comparison semi statement|
-                {for}tab* for [id1]: identifier in [id2]: identifier semi statement|
-                {return}tab* return expression|
-                {print}tab* print expression comma_expression*|
-				{eq}tab* identifier eq expression|
-                {s_minus}tab* identifier self_minus expression|
-				{minus_minus}tab* identifier minus_minus expression|
-                {self_divide}tab* identifier self_divide expression|
-                {assign_list}tab* identifier l_br [ex1]: expression r_br eq [ex2]: expression|
-			    {assert}tab* assert expression comma_expression?|
-                {func_call}tab* function_call;
+    statement = {if}tab* if comparison semi statement
+				{-> New statement.if(comparison, statement)} |
+                {while}tab* while comparison semi statement
+				{-> New statement.while(comparison, statement)}|
+                {for}tab* for [id1]: identifier in [id2]: identifier semi statement
+				{-> New statement.for(id1, id2, statement)}|
+                {return}tab* return expression
+				{-> New statement.return(expression)}|
+                {print}tab* print expression comma_expression*
+				{-> New stamenent.print()}|
+				{eq}tab* identifier eq expression
+				{-> New statement.eq(identifier, expression)}|
+                {s_minus}tab* identifier self_minus expression
+				{-> New statement.s_minus(identifier, expression) }|
+				{minus_minus}tab* identifier minus_minus expression 
+				{-> New statement.minus_minus(identifier, expression) }|
+                {self_divide}tab* identifier self_divide expression 
+				{-> New statement.self_divide(identifier, expression)}|
+                {assign_list}tab* identifier l_br [ex1]: expression r_br eq [ex2]: expression
+				{-> New stamenent.assign_list(identifier, ex1, ex2)}|
+			    {assert}tab* assert expression comma_expression?
+				{-> New statement.assert()}|
+                {func_call}tab* function_call
+				{-> New statement.fun_call(function_call)};
 	
 	expression = sum;
 
