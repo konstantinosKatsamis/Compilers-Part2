@@ -162,3 +162,7 @@ Productions
     comma_expression = comma expression;
 
 	comma_value = comma value;
+
+Abstract Syntax Tree
+
+	goal = command*;
