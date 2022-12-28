@@ -63,7 +63,6 @@ Tokens
     or = 'or';
 	none = 'None';
     not = 'not';
-	integer_literal = digit+ | (digit+ '.' digit+);
 	identifier = letter (letter | digit | '_')*;
 	string_literal = d_quote [not_eol - d_quote]* d_quote | s_quote [not_eol - s_quote]* s_quote;
 
@@ -103,9 +102,9 @@ Productions
 	expression = sum{-> sum.expression};
 
 	sum{->expression} = {sum} sum plus term{-> New expression.arithmetic(sum.expression, New binop.plus(plus), term.expression)} |
-			{minus} sum minus term{-> New expression.arithmetic(sum.expression, New binop.minus(minus), term.expression)} |
 			{plus_plus} expression plus_plus{-> New expression.arithmetic(sum.expression, New binop.plus_plus(plus_plus))} |
 			{minus_minus} expression minus_minus{-> New expression.arithmetic(sum.expression, New binop.minus_minus(minus_minus))} |
+			{minus} sum minus term{-> New expression.arithmetic(sum.expression, New binop.minus(minus), term.expression)} |
 			{term} term{-> term.expression};
 	
 	term{-> expression} = {mult} term mult power{-> New expression.arithmetic(term.expression, New binop.mult(mult), power.expression)} |
@@ -147,15 +146,13 @@ Productions
 	   	     {less_eq} [exp1]: expression less_eq [exp2]: expression{-> New comparison.less_eq(exp1, exp2)} |
 	    	 {great_eq} [exp1]: expression great_eq [exp2]: expression{-> New comparison.great_eq(exp1, exp2)} |
 	    	 {not_eq} [exp1]: expression not_eq [exp2]: expression{-> New comparison.not_eq(exp1, exp2)} |
-	     	 {eq} [exp1]: expression eq_eq [exp2]: expression{-> New comparison.eq(exp1, exp2)} |
-	   	  	 {true} true{-> New comparison.true()} |
+	     	 {true} true{-> New comparison.true()} |
 			 {false} false{-> New comparison.false()};
 
 	value{-> value} = {fun_call} identifier dot function_call{-> New value.method(identifier, function_call)} |
-			{str_call} string_literal{-> New value.str_call(string_literal)} |
+			{strng_ltrl} string_literal {-> New value.strng_ltrl(string_literal)} |
 			{none} none{-> New value.none(none)} |
-			{num} number{-> number.value} |
-            {str} string{-> string.value};
+			{num} number{-> New value.num(number)};
 
     function_call = identifier l_par arglist? r_par{-> New function_call(identifier, [arglist.expression])};
 
@@ -199,7 +196,8 @@ Abstract Syntax Tree
                 {max} [v1]:value [v2]:value+|
                 {min} [v1]:value [v2]:value+|
                 {par} expression |
-                {list_def} [e1]:expression [e2]:expression*;
+                {list_def} [e1]:expression [e2]:expression* |
+				{oneplus} expression;
 
 	binop = {plus} plus |
             {minus} minus |
@@ -215,6 +213,7 @@ Abstract Syntax Tree
                  {less} [exp1]: expression [exp2]: expression |
                  {leq} [exp1]: expression [exp2]: expression |
                  {great_eq} [exp1]: expression [exp2]: expression |
+				 {less_eq} [exp1]: expression [exp2]: expression |
                  {not_eq} [exp1]: expression [exp2]: expression |
                  {eq_eq} [exp1]: expression [exp2]: expression |
                  {true}|
@@ -222,4 +221,7 @@ Abstract Syntax Tree
 
 	function_call = identifier expression*;
 
-	value = {method} identifier function_call|{number}integer_literal|{string}string_literal|{none}none;
+	value = {method} identifier function_call|
+			{num} number |
+			{strng_ltrl} string_literal|
+			{none}none;
