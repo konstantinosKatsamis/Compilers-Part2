@@ -79,9 +79,11 @@ Productions
 
 	function = def identifier l_par argument? r_par semi statement {-> New function(identifier, [argument.identifier_value], statement)};
 
-    argument{-> identifier_value*} = identifier assign_value? comma_id_assign_value* {-> New argument(identifier, assign_value) };
+	argument{-> identifier_value*} = identifier_assign_value comma_id_assign_value* {-> [identifier_assign_value.identifier_value comma_id_assign_value.identifier_value]};
 
-    comma_id_assign_value{-> identifier_value} = comma identifier assign_value?;
+    identifier_assign_value{->identifier_value} = identifier assign_value?{-> New identifier_value(identifier, assign_value.value) };
+
+    comma_id_assign_value{->identifier_value} = comma identifier_assign_value? {-> identifier_assign_value.identifier_value};
   
     assign_value{-> value} = eq value{-> value};
   
@@ -89,14 +91,14 @@ Productions
                 {while}tab* while comparison semi statement {-> New statement.while(comparison, statement)} |
                 {for}tab* for [id1]: identifier in [id2]: identifier semi statement {-> New statement.for(id1, id2, statement)} |
                 {return}tab* return expression {-> New statement.return(expression)} |
-                {print}tab* print expression comma_expression* {-> New stamenent.print(expression, [comma_expression.expression])} |
+                {print}tab* print expression comma_expression* {-> New statement.print(expression, [comma_expression.expression])} |
 				{eq}tab* identifier eq expression {-> New statement.eq(identifier, expression)} |
                 {s_minus}tab* identifier self_minus expression {-> New statement.s_minus(identifier, expression)} |
 				{minus_minus}tab* identifier minus_minus expression {-> New statement.minus_minus(identifier, expression)} |
                 {self_divide}tab* identifier self_divide expression {-> New statement.self_divide(identifier, expression)} |
-                {assign_list}tab* identifier l_br [ex1]: expression r_br eq [ex2]: expression {-> New stamenent.assign_list(identifier, ex1, ex2)} |
+                {assign_list}tab* identifier l_br [ex1]: expression r_br eq [ex2]: expression {-> New statement.assign_list(identifier, ex1, ex2)} |
 			    {assert}tab* assert expression comma_expression? {-> New statement.assert(expression, comma_expression.expression)} |
-                {func_call}tab* function_call {-> New statement.fun_call(function_call)};
+                {func_call}tab* function_call {-> New statement.func_call(function_call)};
 	
 	expression = sum{-> sum.expression};
 
@@ -177,19 +179,16 @@ Abstract Syntax Tree
 	statement = {if} comparison statement |
                 {while} comparison statement |
                 {for} [id1]: identifier [id2]: identifier statement |
-                {return} expression |
-                {print} [exp1]:expression [exp2]:expression* |
-				{assert} identifier expression |
+                {return}expression |
+                {print} [exp1]: expression [exp2]: expression* |
+				{eq} identifier expression |
 				{s_minus}identifier expression |
+				{minus_minus} identifier expression |
 				{self_divide} identifier expression |
-				{assign_list} identifier [ex1]: expression [ex2]: expression;
-
-				/* htan prohgoumenos sto statement
-				{eq}identifier expression |
-				{minus_minus} minus_minus expression {-> New statement.minus_minus(identifier, expression)} | TODO 
-			    {assert} expression comma_expression? {-> New statement.assert()} |  TODO 
-                {func_call} {-> New statement.fun_call(function_call)};  TODO 
-				*/
+				{assign_list} identifier [ex1]: expression [ex2]: expression |
+				{assert} [exp1]: expression [exp2]: expression? |
+				{func_call} function_call|;
+				
 
 	expression = {arithmetic} [e1]:expression binop [e2]:expression |
 				{subscription} identifier expression |
