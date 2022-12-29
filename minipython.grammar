@@ -102,8 +102,8 @@ Productions
 	expression = sum{-> sum.expression};
 
 	sum{->expression} = {sum} sum plus term{-> New expression.arithmetic(sum.expression, New binop.plus(plus), term.expression)} |
-			{plus_plus} expression plus_plus{-> New expression.arithmetic(sum.expression, New binop.plus_plus(plus_plus))} |
-			{minus_minus} expression minus_minus{-> New expression.arithmetic(sum.expression, New binop.minus_minus(minus_minus))} |
+			{ps_ps} expression plus_plus{-> New expression.double_operator(expression, New binop.ps_ps(plus_plus))} |
+			{mns_mns} expression minus_minus{-> New expression.double_operator(expression, New binop.mns_mns(minus_minus))} |
 			{minus} sum minus term{-> New expression.arithmetic(sum.expression, New binop.minus(minus), term.expression)} |
 			{term} term{-> term.expression};
 	
@@ -188,6 +188,7 @@ Abstract Syntax Tree
 				
 
 	expression = {arithmetic} [e1]:expression binop [e2]:expression |
+				{double_operator} [e1]:expression binop |
 				{subscription} identifier expression |
                 {func_call} function_call |
                 {value} value |
@@ -196,15 +197,16 @@ Abstract Syntax Tree
                 {max} [v1]:value [v2]:value+|
                 {min} [v1]:value [v2]:value+|
                 {par} expression |
-                {list_def} [e1]:expression [e2]:expression* |
-				{oneplus} expression;
+                {list_def} [e1]:expression [e2]:expression*;
 
 	binop = {plus} plus |
             {minus} minus |
             {mult} mult |
             {div} div |
             {modulo} mod |
-            {pow} mult_mult;
+            {pow} mult_mult |
+			{ps_ps} plus_plus |
+			{mns_mns} minus_minus;
 
 	comparison = {and} [com1]:comparison [com2]:comparison |
                  {or} [com1]:comparison [com2]:comparison |
