@@ -5,10 +5,10 @@ import java.util.Hashtable;
 import minipython.node.PExpression;
 
 public class FunctionData {
-    public String name;
+    private String name;
     public Hashtable<String, Types> arguments;
-    public Types type;
-    public PExpression returnExpression = null;
+    private Types type;
+    private PExpression returnExpression = null;
 
     public FunctionData(String name){
         this.name = name;
@@ -25,4 +25,33 @@ public class FunctionData {
         }
         return n;
     }
+
+    public int getArgumentsSize(){
+        return arguments.size();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Types getType() {
+        return type;
+    }
+
+    public void setType(Types type) {
+        this.type = type;
+    }
+
+    public PExpression getReturnExpression() {
+        return returnExpression;
+    }
+
+    public void setReturnExpression(PExpression returnExpression) {
+        this.returnExpression = returnExpression;
+    }
+
 }
