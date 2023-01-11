@@ -27,7 +27,10 @@ public class VisitorTester
 
             Start ast = parser.parse();
             ast.apply(new Visitor1(functions, variables));
-            ast.apply(new Visitor2(functions, variables, functionCalls));
+            Visitor2 visitor2 = new Visitor2(functions, variables, functionCalls);
+            ast.apply(visitor2);
+            visitor2.printFunctionsData();
+            visitor2.printFunctionCalls();
 
       /*
      Hashtable symtable =  new Hashtable();

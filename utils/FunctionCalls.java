@@ -12,4 +12,16 @@ public class FunctionCalls
         this.name = name;
         this.args = new LinkedList<>();
     }
+
+    // temp del functions
+    public void printArguments(){
+        for(Types t: args){
+            System.out.println("\t" + t.toString());
+            
+        }
+    }
+
+    public int getCalls(){
+        return args.size();
+    }
 }

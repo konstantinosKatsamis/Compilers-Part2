@@ -92,8 +92,8 @@ Productions
 	           {statement} statement {-> New command.statement(statement)};
 
 	function = def identifier l_par argument? r_par semi statement {-> New function(identifier, [argument.identifier_value], statement)};
-
-    argument{-> identifier_value*} = identifier_assign_value comma_id_assign_value* {-> [identifier_assign_value.identifier_value comma_id_assign_value.identifier_value]};
+	    
+	argument{-> identifier_value*} = identifier_assign_value comma_id_assign_value* {-> [identifier_assign_value.identifier_value comma_id_assign_value.identifier_value]};
 
     identifier_assign_value{->identifier_value} = identifier assign_value?{-> New identifier_value(identifier, assign_value.value) };
     comma_id_assign_value{->identifier_value} = comma identifier_assign_value? {-> identifier_assign_value.identifier_value};
@@ -236,3 +236,7 @@ Abstract Syntax Tree
     function_call = identifier expression*;
 
     value = {method} identifier function_call|{number}integer_literal|{string}string_literal|{none}none;
+
+	arglist = {arglist} expression comma_expression*;
+
+	comma_expression = {comma_expression} comma expression;
