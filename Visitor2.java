@@ -94,17 +94,7 @@ public class Visitor2 extends DepthFirstAdapter{
         }
     }*/
 
-    // when we leave a numeric operation we check if its correct
-    @Override
-    public void inAPlusBinop(AArithmeticExpression node){
-    // public void inAPlusBinop(APlusBinop node)
-        Expression a = node.getE1();
-
-    }
-
-    public void patenta(AArithmeticExpression node){
-        Object a = node.getE1();
-    }
+    
 
 
     private Types getExpressionType(PExpression node)
