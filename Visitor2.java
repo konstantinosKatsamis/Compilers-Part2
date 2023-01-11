@@ -25,10 +25,10 @@ public class Visitor2 extends DepthFirstAdapter{
 
     private int curLine = 0;
 
-    public Visitor2(Hashtable<String, LinkedList<FunctionData>> functions, Hashtable<String, Types> variables, Hashtable<String, FunctionCalls> functionCalls)
+    public Visitor2(Hashtable<String, LinkedList<FunctionData>> functions, Hashtable<String, Types> vars, Hashtable<String, FunctionCalls> functionCalls)
     {
         this.functions = functions;
-        this.variables = variables;
+        this.variables = vars;
         this.functionCalls = functionCalls;
     }
 
@@ -68,11 +68,6 @@ public class Visitor2 extends DepthFirstAdapter{
         curFunc = new FunctionCalls(node.getIdentifier().toString());
     }
 
-    @Override
-    public void inAPlusBinop(APlusBinop node){
-        PExpression a = node.getPlus();
-    }
-
     // we leaving the function call so we need to check if the arguments are correct and get its return type
     @Override
     public void outAFunctionCall(AFunctionCall node){
@@ -99,7 +94,65 @@ public class Visitor2 extends DepthFirstAdapter{
         }
     }*/
 
-    
+
+    // for every arithmetic like +, -, *, /
+    @Override
+    public void outAArithmeticExpression(AArithmeticExpression node){
+        PExpression a = node.getE1();
+        PExpression b = node.getE2();
+        getOperationType(a, b);
+    }
+
+    private void getOperationType(PExpression a, PExpression b)
+    {
+        //If we are in a return statement ignore the check since we don't know what each variable might be
+        if (!inReturn)
+        {
+            Types at, bt;
+            //Get a Type
+            if (variables.containsKey(a.toString()))
+            {
+                at = variables.get(a.toString());
+            } else
+            {
+                at = getExpressionType(a);
+            }
+
+            //Get b Type
+            if (variables.containsKey(b.toString()))
+            {
+                bt = variables.get(b.toString());
+            } else
+            {
+                bt = getExpressionType(b);
+            }
+
+            //If model.Types are the both Numeric or NAN it's fine
+            if ((at == Types.NUMERIC && bt == Types.NUMERIC) || (at == Types.NAN && bt == Types.NAN))
+            {
+                variables.put(a.parent().toString(), at);
+            }
+            //Else print error and set it's type as Numeric to avoid further errors
+            else
+            {
+                System.err.println(String.format("Line %d: Numeric operations cannot be performed between %s type and %s type", curLine, at.toString(), bt.toString()));
+                variables.put(a.parent().toString(), Types.NUMERIC);
+            }
+        }
+    }
+
+
+    // when we are in return statement
+    @Override
+    public void inAReturnStatement(AReturnStatement node){
+        inReturn = true;
+    }
+
+    @Override
+    public void outAReturnStatement(AReturnStatement node)
+    {
+        inReturn = false;
+    }
 
 
     private Types getExpressionType(PExpression node)
