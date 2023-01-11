@@ -1,0 +1,4 @@
+#!/bin/sh
+java -jar lib/sablecc.jar $*
+javac ParserTest1.java
+java ParserTest1 test.py

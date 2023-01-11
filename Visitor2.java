@@ -50,7 +50,7 @@ public class Visitor2 extends DepthFirstAdapter{
 
     // declear a new variable. we need to keep track of what value type ti is
     @Override
-    public void inAEqStatement(AEqStatement node){
+    public void inAAssignStatement(AAssignStatement node){
         String vName = node.getIdentifier().toString();
         variables.put(vName, getExpressionType(node.getExpression()));
     }
@@ -162,7 +162,7 @@ public class Visitor2 extends DepthFirstAdapter{
 
     private Types getValueType(PValue value)
     {
-        if(value instanceof AStrngLtrlValue)
+        if(value instanceof AStringValue)
         {
             return Types.STRING;
         }

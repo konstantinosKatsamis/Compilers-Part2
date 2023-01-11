@@ -8,7 +8,7 @@ import utils.FunctionData;
 import utils.FunctionCalls;
 import utils.Types;
 
-public class ParserTest
+public class VisitorTester
 {
   public static void main(String[] args)
   {
@@ -26,7 +26,7 @@ public class ParserTest
             Hashtable<String, FunctionCalls> functionCalls = new Hashtable<>();
 
             Start ast = parser.parse();
-            ast.apply(new visitor1(functions, variables));
+            ast.apply(new Visitor1(functions, variables));
             ast.apply(new Visitor2(functions, variables, functionCalls));
 
       /*

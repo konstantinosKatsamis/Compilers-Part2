@@ -8,12 +8,12 @@ import utils.FunctionData;
 import utils.Types;
 import minipython.node.*;
 
-public class visitor1 extends DepthFirstAdapter{
+public class Visitor1 extends DepthFirstAdapter{
     private Hashtable<String, LinkedList<FunctionData>> functions;
     private Hashtable<String, Types> variables;
     private FunctionData currentFunc;
 
-    public visitor1(Hashtable<String, LinkedList<FunctionData>> functions, Hashtable<String, Types> variables){
+    public Visitor1(Hashtable<String, LinkedList<FunctionData>> functions, Hashtable<String, Types> variables){
         this.functions = functions;
         this.variables = variables;
     }
