@@ -33,8 +33,8 @@ Tokens
 	r_br = ']';
 	comma=',';
 	qmark = '?';
-	semi = ';';
-    	dot = '.';
+	semi = ':';
+    dot = '.';
 
 	plus = '+';
 	minus = '-';
@@ -76,7 +76,6 @@ Tokens
 	or = 'or';
 	not = 'not';
 
-	colon = ':';
 	quote = '"';
 	blank = (' ' | lf | cr);
 	integer_literal = digit+ | (digit+ '.' digit+);
@@ -92,7 +91,7 @@ Productions
 	command = {func} function {-> New command.func(function)}|
 	           {statement} statement {-> New command.statement(statement)};
 
-	function = def identifier l_par argument? r_par colon statement {-> New function(identifier, [argument.identifier_value], statement)};
+	function = def identifier l_par argument? r_par semi statement {-> New function(identifier, [argument.identifier_value], statement)};
 
     argument{-> identifier_value*} = identifier_assign_value comma_id_assign_value* {-> [identifier_assign_value.identifier_value comma_id_assign_value.identifier_value]};
 
@@ -101,9 +100,9 @@ Productions
     assign_value{-> value} = assign value{-> value.value};
 
 
-    statement = {if}tab* if comparison colon statement {-> New statement.if(comparison, statement)} |
-                {while}tab* while comparison colon statement {-> New statement.while(comparison, statement)} |
-                {for}tab* for [id1]: identifier in [id2]: identifier colon statement {-> New statement.for(id1, id2, statement)} |
+    statement = {if}tab* if comparison semi statement {-> New statement.if(comparison, statement)} |
+                {while}tab* while comparison semi statement {-> New statement.while(comparison, statement)} |
+                {for}tab* for [id1]: identifier in [id2]: identifier semi statement {-> New statement.for(id1, id2, statement)} |
                 {return}tab* return expression {-> New statement.return(expression)}|
                 {print}tab* print expression comma_expression* {-> New statement.print(expression, [comma_expression.expression])}|
                 {assignment}tab* assignment_statement {-> assignment_statement.statement}|

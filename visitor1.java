@@ -57,13 +57,25 @@ public class Visitor1 extends DepthFirstAdapter{
         currentFunc.setReturnExpression(node.getExpression());
     }
 
+// TODO - prepei na mpoun 2 inXXArgument(default value kai without deafult value)
+// isos na allaksoume to grammar file, k na mpoun rita entoles gia default timi kai
+// gia kanoniki timi
     // parameter of the current function with defult value
     @Override
     public void inAArgument(AArgument node){
-        currentFunc.arguments.put(node.getId1().toString(), Types.NAN);
-        variables.put(node.getId1().toString(), Types.NAN);
+        // 
+        currentFunc.arguments.put(node.getId1().toString(), Types.NUMERIC);
+        variables.put(node.getId1().toString(), Types.NUMERIC);
     }
 
+    /*
+    @Override
+    public void inADefaultArgument(AArgument node){
+        // 
+        currentFunc.arguments.put(node.getId1().toString(), Types.NUMERIC);
+        variables.put(node.getId1().toString(), Types.NUMERIC);
+    }
+     */
     
 
 }

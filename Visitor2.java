@@ -68,6 +68,11 @@ public class Visitor2 extends DepthFirstAdapter{
         curFunc = new FunctionCalls(node.getIdentifier().toString());
     }
 
+    @Override
+    public void inAPlusBinop(APlusBinop node){
+        PExpression a = node.getPlus();
+    }
+
     // we leaving the function call so we need to check if the arguments are correct and get its return type
     @Override
     public void outAFunctionCall(AFunctionCall node){
