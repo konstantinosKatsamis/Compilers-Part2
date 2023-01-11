@@ -5,6 +5,7 @@ import minipython.parser.Parser;
 import minipython.node.*;
 import java.util.*;
 import utils.FunctionData;
+import utils.FunctionCalls;
 import utils.Types;
 
 public class ParserTest
@@ -22,11 +23,11 @@ public class ParserTest
 
         Hashtable<String, LinkedList<FunctionData>> functions = new Hashtable<>();
             Hashtable<String, Types> variables = new Hashtable<>();
-            //Hashtable<String, FunctionCalls> functionCalls = new Hashtable<>();
+            Hashtable<String, FunctionCalls> functionCalls = new Hashtable<>();
 
             Start ast = parser.parse();
             ast.apply(new visitor1(functions, variables));
-            //ast.apply(new visitor2(functions, variables, functionCalls));
+            ast.apply(new Visitor2(functions, variables, functionCalls));
 
       /*
      Hashtable symtable =  new Hashtable();

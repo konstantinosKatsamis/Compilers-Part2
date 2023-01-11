@@ -1,8 +1,1 @@
-def r(x=1):
-    print x
-
-
-
-
-def r(x, y):
-    return 1
+x = 1 + 1

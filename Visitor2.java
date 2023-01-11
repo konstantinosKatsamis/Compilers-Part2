@@ -1,10 +1,11 @@
 import java.util.Hashtable;
 
-import org.sablecc.sablecc.node.TId;
+
 
 import utils.*;
 import minipython.node.*;
 
+import java.beans.Expression;
 import java.util.*;
 
 import minipython.analysis.DepthFirstAdapter;
@@ -53,6 +54,58 @@ public class Visitor2 extends DepthFirstAdapter{
         String vName = node.getIdentifier().toString();
         variables.put(vName, getExpressionType(node.getExpression()));
     }
+
+    // we declear a new list so we need to keep track of what value type it is
+    @Override
+    public void inAAssignListStatement(AAssignListStatement node){
+        String vName = node.getIdentifier().toString();
+        variables.put(vName, getExpressionType(node.getEx1()));
+    }
+
+    // we found a new FunctionCall so we create a new functionData
+    @Override
+    public void inAFunctionCall(AFunctionCall node){
+        curFunc = new FunctionCalls(node.getIdentifier().toString());
+    }
+
+    // we leaving the function call so we need to check if the arguments are correct and get its return type
+    @Override
+    public void outAFunctionCall(AFunctionCall node){
+        // get functionData and print error if not found
+        FunctionData f = getFunctionData(node, true);
+        if(f != null){
+            // make String array of all parameter names of found function that we are calling
+            String [] fTypes = f.arguments.keySet().toArray(new String[f.arguments.size()]);
+
+            // For each parameter see its type equal to the functioncall parameter types
+            for(int i=0; i<curFunc.args.size(); i++){
+                variables.put(fTypes[i], curFunc.args.get(i));
+            }
+            // get its type
+            f.setType(getExpressionType(f.getReturnExpression()));
+        }
+    }
+
+    /* // save functions's argument utils.Types
+    @Override
+    public void inAArgument(AArgument node){
+        if(curFunc != null){
+            curFunc.args.add(getExpressionType(node.getId2().getExpression()));
+        }
+    }*/
+
+    // when we leave a numeric operation we check if its correct
+    @Override
+    public void inAPlusBinop(AArithmeticExpression node){
+    // public void inAPlusBinop(APlusBinop node)
+        Expression a = node.getE1();
+
+    }
+
+    public void patenta(AArithmeticExpression node){
+        Object a = node.getE1();
+    }
+
 
     private Types getExpressionType(PExpression node)
     {

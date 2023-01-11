@@ -22,10 +22,7 @@ public class visitor1 extends DepthFirstAdapter{
     @Override
     public void inAFunction(AFunction node){
         currentFunc = new FunctionData(node.getIdentifier().toString()); //new FunctionData(node.getId().toString());
-        System.out.println(currentFunc.getName() + "====");
-        System.out.println(currentFunc.getType() + "====");
-        System.out.println(currentFunc.getArgumentsSize() + "====");
-        
+                
     }
 
     // exit the function declaretion. collect all required info and check for fuplicates
