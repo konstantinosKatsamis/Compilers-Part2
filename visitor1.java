@@ -40,8 +40,6 @@ public class Visitor1 extends DepthFirstAdapter{
     // exit the function declaretion. collect all required info and check for fuplicates
     @Override
     public void outAFunction(AFunction node){
-        //out.println(currentFunc.getArguments());
-        // out.println(currentFunc.getName());
         // if other function exist with the same name
         if(functions.containsKey(currentFunc.getName())){
             // get all functions with same name
@@ -72,27 +70,24 @@ public class Visitor1 extends DepthFirstAdapter{
         currentFunc.setReturnExpression(node.getExpression());
     }
 
-// TODO - prepei na mpoun 2 inXXArgument(default value kai without deafult value)
-// isos na allaksoume to grammar file, k na mpoun rita entoles gia default timi kai
-// gia kanoniki timi
+
     // parameter of the current function with defult value
-    @Override
+    /* @Override
     public void inAArgument(AArgument node){
         out.println(node.getId2().toString());
         currentFunc.arguments.put(node.getId1().toString(), Types.NUMERIC);
         variables.put(node.getId2().toString(), Types.NUMERIC);
         // currentFunc.printArguments();
         
-    }
+    }*/
 
-    @Override
+    /*@Override
     public void outAArgument(AArgument node){
         //System.out.println(node.getCommaIdAssignValue());
         out.println(node.getId2().toString());
         
-    }
+    }*/
     
-
     /*
     @Override
     public void inADefaultArgument(AArgument node){

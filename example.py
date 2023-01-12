@@ -1,10 +1,8 @@
 
-def azaggira(x, y = 1, z = "2"):
-    print "azz"
 
 
-def func2():
-    return "Hello World!"
+def func2(x, y, z):
+    return x + y+z
 
 def azaggira(x, y, z, w):
     return 12
