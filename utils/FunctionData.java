@@ -9,6 +9,24 @@ public class FunctionData {
     public Hashtable<String, Types> arguments;
     private Types type;
     private PExpression returnExpression = null;
+    private int numOfArguments;
+    private boolean hasDefault;
+
+    public boolean isHasDefault() {
+        return hasDefault;
+    }
+
+    public void setHasDefault(boolean hasDefault) {
+        this.hasDefault = hasDefault;
+    }
+
+    public int getNumOfArguments() {
+        return numOfArguments;
+    }
+
+    public void setNumOfArguments(int numOfArguments) {
+        this.numOfArguments = numOfArguments;
+    }
 
     public FunctionData(String name){
         this.name = name;
@@ -52,6 +70,15 @@ public class FunctionData {
 
     public void setReturnExpression(PExpression returnExpression) {
         this.returnExpression = returnExpression;
+    }
+
+    // temp - del function
+    
+    public void printArguments(){
+        System.out.println("-----------------------------------------------------------------Printing arguments");
+        for (Types value : arguments.values()) {
+            System.out.println("Value: " + value + ", Key: " + arguments.entrySet().stream().filter(entry -> value.equals(entry.getValue())).findFirst().get().getKey());
+        }
     }
 
 }

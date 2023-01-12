@@ -91,7 +91,7 @@ public class Visitor2 extends DepthFirstAdapter{
         }
     }
 
-    // we leaving the function call so we need to check if the arguments are correct and get its return type
+    // we leaving the !!!!function call!!! so we need to check if the arguments are correct and get its return type
     @Override
     public void outAFunctionCall(AFunctionCall node){
         System.out.println("outAFunctionCall-----------------------------");
@@ -103,6 +103,7 @@ public class Visitor2 extends DepthFirstAdapter{
 
             // For each parameter see its type equal to the functioncall parameter types
             for(int i=0; i<curFunc.args.size(); i++){
+                System.out.println(curFunc.args.get(i));
                 variables.put(fTypes[i], curFunc.args.get(i));
             }
             // get its type
@@ -110,13 +111,21 @@ public class Visitor2 extends DepthFirstAdapter{
         }
     }
 
-    /* // save functions's argument utils.Types
+    // save functions's argument utils.Types
     @Override
     public void inAArgument(AArgument node){
+        out.println("inFunc -- let see if we got args:");
+        out.println(node.getId1());
         if(curFunc != null){
-            curFunc.args.add(getExpressionType(node.getId2().getExpression()));
+            out.println(node.getId1());
+            //curFunc.args.add(getExpressionType(node.getId2().toString()));
         }
-    }*/
+    }
+
+    @Override
+    public void outAArgument(AArgument node){
+        out.println("outFunc -- let see if we got args:");
+    }
 
 
     // for every arithmetic like +, -, *, /
@@ -216,6 +225,8 @@ public class Visitor2 extends DepthFirstAdapter{
 
     private FunctionData getFunctionData(AFunctionCall node, boolean print)
     {
+        out.println("kalimeraaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+        out.println(node.getExpression());
         //if we cannot find it then print error
         if(!functions.containsKey(node.getIdentifier().toString()))
         {
@@ -242,7 +253,7 @@ public class Visitor2 extends DepthFirstAdapter{
         return null;
     }
 
-    private Types getValueType(PValue value)
+    public Types getValueType(PValue value)
     {
         if(value instanceof AStringValue)
         {
@@ -289,7 +300,7 @@ public class Visitor2 extends DepthFirstAdapter{
             LinkedList<FunctionData> funcList = functions.get(funcName);
             for (FunctionData funcData : funcList) {
                 out.println("Function name: " + funcData.getName());
-                out.println("Arguments:");
+                out.println("Arguments - " + funcData.arguments.size() + ":");
                 for (Map.Entry<String, Types> entry : funcData.arguments.entrySet()) {
                     out.println("    " + entry.getKey() + ": " + entry.getValue());
                 }

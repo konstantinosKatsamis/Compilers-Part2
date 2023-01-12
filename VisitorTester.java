@@ -30,7 +30,7 @@ public class VisitorTester
             Visitor2 visitor2 = new Visitor2(functions, variables, functionCalls);
             ast.apply(visitor2);
             visitor2.printFunctionsData();
-            visitor2.printFunctionCalls();
+            // visitor2.printFunctionCalls();
 
       /*
      Hashtable symtable =  new Hashtable();
