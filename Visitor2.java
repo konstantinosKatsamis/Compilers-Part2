@@ -31,29 +31,15 @@ public class Visitor2 extends DepthFirstAdapter{
         this.functionCalls = functionCalls;
     }
 
-    // we found a use of an array, so we check if it has been decleared @TODO
-    /*@Override
-    public void inAListDefExpression(AListDefExpression node){
-        String vName = node.toString();
-        int line = node.getLine();
-        checkVariableDefinition(node.get, true);
-        // node.toString();
-        // node.getLine();
-    }*/
-
     // we just found a use of a identifier so we check if it has been decleared
     @Override
     public void inAIdentifierExpression(AIdentifierExpression node){
-        // tha elegxei gia ta return statements twn methodon j meta
-        // out.println("\t -- inAIdentifierExpression -- ");
         checkVariableDefinition(node.getIdentifier(), true);
-        // out.println("\taaaakrivos meta");
     }
 
     // declear a new variable. we need to keep track of what value type ti is
     @Override
     public void inAAssignStatement(AAssignStatement node){
-        // out.println(" -- inAAssignStatement -- ");
         String vName = node.getIdentifier().toString();
         variables.put(vName, getExpressionType(node.getExpression()));
     }
@@ -61,7 +47,6 @@ public class Visitor2 extends DepthFirstAdapter{
     // we declear a new list so we need to keep track of what value type it is
     @Override
     public void inAAssignListStatement(AAssignListStatement node){
-        // out.println(" -- inAAssignListStatement -- ");
         String vName = node.getIdentifier().toString();
         variables.put(vName, getExpressionType(node.getEx1()));
     }
@@ -75,7 +60,6 @@ public class Visitor2 extends DepthFirstAdapter{
     // save function's argument model.Types temprarly
     @Override
     public void inAArglistArglist(AArglistArglist node){
-        // out.println("OUT_ARGLIST-----------------------------");
         if(curFunc != null)
         {
             curFunc.args.add(getExpressionType(node.getExpression()));
@@ -84,6 +68,7 @@ public class Visitor2 extends DepthFirstAdapter{
 
     @Override
     public void inATypeExpression(ATypeExpression node) {
+        out.println(node.getClass().toString());
         TIdentifier typeExpr = node.getIdentifier();
         out.println(typeExpr.getClass());
         out.println(typeExpr.getLine());
@@ -94,20 +79,15 @@ public class Visitor2 extends DepthFirstAdapter{
     // save function's argument model.Types
     @Override
     public void outAArglistArglist(AArglistArglist node){
-        // System.out.println("IN_ARGLIST-----------------------------");
         // if current function != null we are ok to put the arguments in the correct fynction
         if (curFunc != null){
             String fName = curFunc.name;
-            //Object temp = node.getCommaExpression();
-            // System.out.println(node.getExpression().toString());
-        
         }
     }
 
     // we leaving the !!!!function call!!! so we need to check if the arguments are correct and get its return type
     @Override
     public void outAFunctionCall(AFunctionCall node){
-        // System.out.println("outAFunctionCall-----------------------------");
         // get functionData and print error if not found
         FunctionData f = getFunctionData(node, true);
         if(f != null){
@@ -115,7 +95,6 @@ public class Visitor2 extends DepthFirstAdapter{
             String [] fTypes = f.arguments.keySet().toArray(new String[f.arguments.size()]);
             // For each parameter see its type equal to the functioncall parameter types
             for(int i=0; i<curFunc.args.size(); i++){
-                // System.out.println(curFunc.args.get(i));
                 variables.put(fTypes[i], curFunc.args.get(i));
             }
             // get its type
@@ -126,17 +105,9 @@ public class Visitor2 extends DepthFirstAdapter{
     // save functions's argument utils.Types
     @Override
     public void inAArgument(AArgument node){
-        // out.println("inFunc -- let see if we got args:");
-        // out.println(node.getId1());
         if(curFunc != null){
-            // out.println(node.getId1());
             //curFunc.args.add(getExpressionType(node.getId2().toString()));
         }
-    }
-
-    @Override
-    public void outAArgument(AArgument node){
-        // out.println("outFunc -- let see if we got args:");
     }
 
     // for every arithmetic like +, -, *, /
@@ -188,15 +159,12 @@ public class Visitor2 extends DepthFirstAdapter{
     // when we are in return statement
     @Override
     public void inAReturnStatement(AReturnStatement node){
-        // out.println("o methodos mas eshei mesa: " + node.getExpression().toString());
-        // out.println(" --- inAReturnStatement --- ");
         inReturn = true;
     }
 
     @Override
     public void outAReturnStatement(AReturnStatement node)
     {
-        // out.println(" --- outAReturnStatement --- ");
         inReturn = false;
     }
 
@@ -238,7 +206,6 @@ public class Visitor2 extends DepthFirstAdapter{
     private FunctionData getFunctionData(AFunctionCall node, boolean print)
     {
         // out.println("kalimeraaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-        // out.println(node.getExpression());
         //if we cannot find it then print error
         if(!functions.containsKey(node.getIdentifier().toString()))
         {
