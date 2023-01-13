@@ -9,7 +9,6 @@ import java.beans.Expression;
 import java.util.*;
 
 import minipython.analysis.DepthFirstAdapter;
-import minipython.node.AFunction;
 import utils.FunctionData;
 import utils.Types;
 
@@ -81,6 +80,17 @@ public class Visitor2 extends DepthFirstAdapter{
         {
             curFunc.args.add(getExpressionType(node.getExpression()));
         }
+    }
+
+    @Override
+    public void inATypeExpression(ATypeExpression node) {
+        TIdentifier typeExpr = node.getIdentifier();
+        out.println(typeExpr.getClass());
+        out.println(typeExpr.getLine());
+        out.println(typeExpr.getPos());
+        out.println(typeExpr.getText());
+        // out.println(typeExpr.get/);
+        // out.println(node.g);
     }
 
     // save function's argument model.Types

@@ -117,7 +117,6 @@ public class Visitor1 extends DepthFirstAdapter{
         LinkedList<FunctionData> temp = new LinkedList<>();
         temp.add(currentFunc);
         functions.put(currentFunc.getName(), temp);
-        printFunctionsData();
     }
 
     private void alreadyDefinedFunction(int line, String name)
@@ -140,33 +139,6 @@ public class Visitor1 extends DepthFirstAdapter{
         // out.println("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" + node.getId1().toString());
         // out.println("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" + node.getId2().toString());
     }
-
-
-    // parameter of the current function with defult value
-    /* @Override
-    public void inAArgument(AArgument node){
-        out.println(node.getId2().toString());
-        currentFunc.arguments.put(node.getId1().toString(), Types.NUMERIC);
-        variables.put(node.getId2().toString(), Types.NUMERIC);
-        // currentFunc.printArguments();
-        
-    }*/
-
-    /*@Override
-    public void outAArgument(AArgument node){
-        //System.out.println(node.getCommaIdAssignValue());
-        out.println(node.getId2().toString());
-        
-    }*/
-    
-    /*
-    @Override
-    public void inADefaultArgument(AArgument node){
-        // 
-        currentFunc.arguments.put(node.getId1().toString(), Types.NUMERIC);
-        variables.put(node.getId1().toString(), Types.NUMERIC);
-    }
-     */
 
     public Types getValueType(PValue value)
     {
@@ -195,15 +167,15 @@ public class Visitor1 extends DepthFirstAdapter{
         for (String funcName : functions.keySet()) {
             LinkedList<FunctionData> funcList = functions.get(funcName);
             for (FunctionData funcData : funcList) {
-                // out.println("Function name: " + funcData.getName());
-                // out.println("Arguments:");
+                out.println("Function name: " + funcData.getName());
+                out.println("Arguments:");
                 for (Map.Entry<String, Types> entry : funcData.arguments.entrySet()) {
-                    // out.println("    " + entry.getKey() + ": " + entry.getValue());
+                    out.println("    " + entry.getKey() + ": " + entry.getValue());
                 }
-                // out.println("Return type: " + funcData.getType());
-                // out.println("Return expression: " + funcData.getReturnExpression());
+                out.println("Return type: " + funcData.getType());
+                out.println("Return expression: " + funcData.getReturnExpression());
             }
-            // out.println();
+            out.println();
         }
     }
 
