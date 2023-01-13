@@ -30,24 +30,6 @@ public class Visitor1 extends DepthFirstAdapter{
     // we got in a new function, so we create a new FunctionData object
     @Override
     public void inAFunction(AFunction node){
-
-        PStatement pst =  node.getStatement();
-
-        // PExpression pexpr = pst.getClass().toString();
-        // out.println("enikserw: " + pst.getClass().toString());
-        
-        
-
-        // out.println("Statement: " + node.getStatement().toString());
-        PStatement my_statement =  node.getStatement();
-
-        // prospathw na men petassei error aman vriski to x pou to return ths methodou
-        // isos na dw methodous:
-        //      inAReturnStatement, outAReturnStatement -> en mes ton visitor2 omos
-
-
-         
-
         // out.println(" ====== in A Function =======");
         Hashtable<String, Types> temp_args = new Hashtable<>();
         LinkedList<AIdentifierValue> idefs = node.getIdentifierValue();
@@ -74,22 +56,17 @@ public class Visitor1 extends DepthFirstAdapter{
     // exit the function declaretion. collect all required info and check for fuplicates
     @Override
     public void outAFunction(AFunction node){
-        // out.println(" ====== out A Function =======");
         // if other function exist with the same name
-        // out.println("currentFunc.getName(): " + currentFunc.getName());
         if(functions.containsKey(currentFunc.getName())){
-            // out.println("innnn the if statement");
             // get all functions with same name
             for(FunctionData f: functions.get(currentFunc.getName())){
                 // and check if there is a function with same arguments
-                
                 if((f.getArgumentsSize() == currentFunc.getArgumentsSize())){ // katastrofikos elegxos: f.getArguments() == currentFunc.getArguments())
                     // out.println(" =-==-=-==-=-=-=-=-=-=-==-=-=-=-=-=-=-==-=-=- alreadyDefinedFunction from check 1");
                     // out.println(" ------------ ----------- ---------- f.getArguments(): " + f.getArguments());
                     // out.println(" ------------ ----------- ---------- currentFunc.getArguments(): " + currentFunc.getArguments());
                     // out.println(" ------------ ----------- ---------- f.getArgumentsSize(): " + f.getArgumentsSize());
                     // out.println(" ------------ ----------- ---------- currentFunc.getArgumentsSize(): " + currentFunc.getArgumentsSize());
-                    
                     alreadyDefinedFunction(((TIdentifier) node.getIdentifier()).getLine(), currentFunc.getName());
                     return;
                 }
@@ -106,8 +83,6 @@ public class Visitor1 extends DepthFirstAdapter{
                     return;
                 }
                 if(f.getArgumentsSize() == currentFunc.getNonDefaultArguments()){
-                    // out.println(" =-==-=-==-=-=-=-=-=-=-==-=-=-=-=-=-=-==-=-=- alreadyDefinedFunction from check 3");
-                    
                     alreadyDefinedFunction(((TIdentifier) node.getIdentifier()).getLine(), currentFunc.getName());
                     return;
                 }
@@ -129,7 +104,6 @@ public class Visitor1 extends DepthFirstAdapter{
     @Override
     public void inAReturnStatement(AReturnStatement node){
         currentFunc.setReturnExpression(node.getExpression());
-        // out.println("nomizw ksekinw pou dame: " + node.getExpression().toString());
         currentFunc.setReturnExpression(node.getExpression());
     }
 
@@ -160,9 +134,7 @@ public class Visitor1 extends DepthFirstAdapter{
         }
     }
 
-
     // temp - del functions
-
     public void printFunctionsData(){
         for (String funcName : functions.keySet()) {
             LinkedList<FunctionData> funcList = functions.get(funcName);
