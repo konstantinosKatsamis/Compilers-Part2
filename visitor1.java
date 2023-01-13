@@ -30,6 +30,24 @@ public class Visitor1 extends DepthFirstAdapter{
     // we got in a new function, so we create a new FunctionData object
     @Override
     public void inAFunction(AFunction node){
+
+        PStatement pst =  node.getStatement();
+
+        // PExpression pexpr = pst.getClass().toString();
+        // out.println("enikserw: " + pst.getClass().toString());
+        
+        
+
+        // out.println("Statement: " + node.getStatement().toString());
+        PStatement my_statement =  node.getStatement();
+
+        // prospathw na men petassei error aman vriski to x pou to return ths methodou
+        // isos na dw methodous:
+        //      inAReturnStatement, outAReturnStatement -> en mes ton visitor2 omos
+
+
+         
+
         // out.println(" ====== in A Function =======");
         Hashtable<String, Types> temp_args = new Hashtable<>();
         LinkedList<AIdentifierValue> idefs = node.getIdentifierValue();
@@ -112,6 +130,15 @@ public class Visitor1 extends DepthFirstAdapter{
     @Override
     public void inAReturnStatement(AReturnStatement node){
         currentFunc.setReturnExpression(node.getExpression());
+        // out.println("nomizw ksekinw pou dame: " + node.getExpression().toString());
+        currentFunc.setReturnExpression(node.getExpression());
+    }
+
+    @Override
+    public void inAArgument(AArgument node){
+        // LinkedList<> lls =  node.getId2();
+        out.println("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" + node.getId1().toString());
+        out.println("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" + node.getId2().toString());
     }
 
 

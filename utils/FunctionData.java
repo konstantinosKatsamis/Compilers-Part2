@@ -80,10 +80,14 @@ public class FunctionData {
         this.returnExpression = returnExpression;
     }
 
+    public Hashtable<String, Types> getArgumHashtable(){
+        return this.arguments;
+    }
+
     // temp - del function
     
     public void printArguments(){
-        System.out.println("-----------------------------------------------------------------Printing arguments");
+        //System.out.println("-----------------------------------------------------------------Printing arguments");
         for (Types value : arguments.values()) {
             System.out.println("Value: " + value + ", Key: " + arguments.entrySet().stream().filter(entry -> value.equals(entry.getValue())).findFirst().get().getKey());
         }

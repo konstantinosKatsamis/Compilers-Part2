@@ -45,12 +45,16 @@ public class Visitor2 extends DepthFirstAdapter{
     // we just found a use of a identifier so we check if it has been decleared
     @Override
     public void inAIdentifierExpression(AIdentifierExpression node){
+        // tha elegxei gia ta return statements twn methodon j meta
+        // out.println("\t -- inAIdentifierExpression -- ");
         checkVariableDefinition(node.getIdentifier(), true);
+        // out.println("\taaaakrivos meta");
     }
 
     // declear a new variable. we need to keep track of what value type ti is
     @Override
     public void inAAssignStatement(AAssignStatement node){
+        // out.println(" -- inAAssignStatement -- ");
         String vName = node.getIdentifier().toString();
         variables.put(vName, getExpressionType(node.getExpression()));
     }
@@ -58,6 +62,7 @@ public class Visitor2 extends DepthFirstAdapter{
     // we declear a new list so we need to keep track of what value type it is
     @Override
     public void inAAssignListStatement(AAssignListStatement node){
+        out.println(" -- inAAssignListStatement -- ");
         String vName = node.getIdentifier().toString();
         variables.put(vName, getExpressionType(node.getEx1()));
     }
@@ -94,7 +99,7 @@ public class Visitor2 extends DepthFirstAdapter{
     // we leaving the !!!!function call!!! so we need to check if the arguments are correct and get its return type
     @Override
     public void outAFunctionCall(AFunctionCall node){
-        System.out.println("outAFunctionCall-----------------------------");
+        // System.out.println("outAFunctionCall-----------------------------");
         // get functionData and print error if not found
         FunctionData f = getFunctionData(node, true);
         if(f != null){
@@ -178,12 +183,16 @@ public class Visitor2 extends DepthFirstAdapter{
     // when we are in return statement
     @Override
     public void inAReturnStatement(AReturnStatement node){
+        // out.println("o methodos mas eshei mesa: " + node.getExpression().toString());
+        
+        // out.println(" --- inAReturnStatement --- ");
         inReturn = true;
     }
 
     @Override
     public void outAReturnStatement(AReturnStatement node)
     {
+        // out.println(" --- outAReturnStatement --- ");
         inReturn = false;
     }
 
@@ -225,13 +234,14 @@ public class Visitor2 extends DepthFirstAdapter{
 
     private FunctionData getFunctionData(AFunctionCall node, boolean print)
     {
-        out.println("kalimeraaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+        // out.println("kalimeraaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
         out.println(node.getExpression());
         //if we cannot find it then print error
         if(!functions.containsKey(node.getIdentifier().toString()))
         {
             if(print)
             {
+                out.println("from getFunctionData: ");
                 notDefined(node.getIdentifier().getLine(), "Function", node.getIdentifier().toString());
             }
         }
@@ -276,16 +286,61 @@ public class Visitor2 extends DepthFirstAdapter{
 
     private boolean checkVariableDefinition(TIdentifier node, boolean print){
         String vName = node.toString();
+        // out.println("from checkVariableDefinition");
+        for (String funcName : functions.keySet()) {
+            LinkedList<FunctionData> funcList = functions.get(funcName);
+            for (FunctionData funcData : funcList) {
+                Hashtable<String, Types> funcArgs = funcData.getArgumHashtable();
+                for (Map.Entry<String, Types> entry : funcArgs.entrySet()) {
+                    String key = entry.getKey();
+                    Types value = entry.getValue();
+                    if(vName.equals(key)){
+                        return false;
+                    }
+                    // System.out.println("Key: " + key + ", Value: " + value);
+                }
+            }
+        }
+        // out.println("end from checkVariableDefinition\n");
+
         if (!variables.containsKey(vName))
         {
             if(print)
             {
                 int line = node.getLine();
+                
                 notDefined(line, "Variable", vName);
             }
             return false;
         }
+        
         return true;
+    }
+
+    public void kaleseme(){
+        out.println("\nH PATENTA THS PATENTAS MESA DA");
+        for (Map.Entry<String, LinkedList<FunctionData>> entry : functions.entrySet()) {
+            String key = entry.getKey();
+            LinkedList<FunctionData> value = entry.getValue();
+            System.out.println("Functions with key: " + key);
+            for (FunctionData functionData : value) {
+                System.out.println("Name: " + functionData.getName());
+                System.out.println("Type: " + functionData.getType());
+                System.out.println("Return expression: " + functionData.getReturnExpression());
+                functionData.printArguments();
+                
+                // and so on for other fields
+            }
+        }
+
+
+        for (Map.Entry<String, Types> entry : variables.entrySet()) {
+            String key = entry.getKey();
+            Types value = entry.getValue();
+            System.out.println("Key: " + key + ", Value: " + value);
+        }
+        
+
     }
 
     private void notDefined(int line, String type, String name)

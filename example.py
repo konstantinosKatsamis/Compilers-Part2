@@ -2,13 +2,7 @@
 
 
 
-def pame(x = 1, y, z = 2, pou = "mpla", oi):
-    return "ha"
+def getX(x, y):
+    return x + y
 
-def pame(x):
-    return "a"
-
-
-
-
-
+print k
