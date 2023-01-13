@@ -9,13 +9,6 @@ import minipython.node.AFunction;
 import utils.FunctionData;
 import utils.Types;
 import minipython.node.*;
-/*
- * TODO
- * prepei na to kamw na metraei ta orismata pou en default k ta mh default gia na mporei na teiosi to 7o zhthma tou BNF file
- * Na to kamw jino gia na teliosi to 7o zhtoumeno tou BNF file. An eni na xrhsimopoihsw 
- * thn metavliti pou evala gia default value alios na valw mesa 2 arithmous pou enna 
- * apothikefkoun posa default arguments eshei j posa non-def args eshei h kathe methodos
- */
 
 public class Visitor1 extends DepthFirstAdapter{
     private Hashtable<String, LinkedList<FunctionData>> functions;
