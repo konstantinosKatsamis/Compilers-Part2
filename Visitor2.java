@@ -139,7 +139,6 @@ public class Visitor2 extends DepthFirstAdapter{
         // out.println("outFunc -- let see if we got args:");
     }
 
-
     // for every arithmetic like +, -, *, /
     @Override
     public void outAArithmeticExpression(AArithmeticExpression node){
@@ -186,7 +185,6 @@ public class Visitor2 extends DepthFirstAdapter{
         }
     }
 
-
     // when we are in return statement
     @Override
     public void inAReturnStatement(AReturnStatement node){
@@ -201,7 +199,6 @@ public class Visitor2 extends DepthFirstAdapter{
         // out.println(" --- outAReturnStatement --- ");
         inReturn = false;
     }
-
 
     private Types getExpressionType(PExpression node)
     {
