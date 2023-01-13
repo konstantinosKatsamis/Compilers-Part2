@@ -89,8 +89,6 @@ public class Visitor2 extends DepthFirstAdapter{
         out.println(typeExpr.getLine());
         out.println(typeExpr.getPos());
         out.println(typeExpr.getText());
-        // out.println(typeExpr.get/);
-        // out.println(node.g);
     }
 
     // save function's argument model.Types
@@ -115,7 +113,6 @@ public class Visitor2 extends DepthFirstAdapter{
         if(f != null){
             // make String array of all parameter names of found function that we are calling
             String [] fTypes = f.arguments.keySet().toArray(new String[f.arguments.size()]);
-
             // For each parameter see its type equal to the functioncall parameter types
             for(int i=0; i<curFunc.args.size(); i++){
                 // System.out.println(curFunc.args.get(i));
@@ -194,7 +191,6 @@ public class Visitor2 extends DepthFirstAdapter{
     @Override
     public void inAReturnStatement(AReturnStatement node){
         // out.println("o methodos mas eshei mesa: " + node.getExpression().toString());
-        
         // out.println(" --- inAReturnStatement --- ");
         inReturn = true;
     }
@@ -251,7 +247,6 @@ public class Visitor2 extends DepthFirstAdapter{
         {
             if(print)
             {
-                // out.println("from getFunctionData: ");
                 notDefined(node.getIdentifier().getLine(), "Function", node.getIdentifier().toString());
             }
         }
@@ -296,7 +291,6 @@ public class Visitor2 extends DepthFirstAdapter{
 
     private boolean checkVariableDefinition(TIdentifier node, boolean print){
         String vName = node.toString();
-        // out.println("from checkVariableDefinition");
         for (String funcName : functions.keySet()) {
             LinkedList<FunctionData> funcList = functions.get(funcName);
             for (FunctionData funcData : funcList) {
@@ -307,11 +301,9 @@ public class Visitor2 extends DepthFirstAdapter{
                     if(vName.equals(key)){
                         return false;
                     }
-                    // System.out.println("Key: " + key + ", Value: " + value);
                 }
             }
         }
-        // out.println("end from checkVariableDefinition\n");
 
         if (!variables.containsKey(vName))
         {
@@ -364,7 +356,5 @@ public class Visitor2 extends DepthFirstAdapter{
             }*/
         }
     }
-
-
 
 }
