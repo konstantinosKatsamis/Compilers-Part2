@@ -137,8 +137,8 @@ public class Visitor1 extends DepthFirstAdapter{
     @Override
     public void inAArgument(AArgument node){
         // LinkedList<> lls =  node.getId2();
-        out.println("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" + node.getId1().toString());
-        out.println("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" + node.getId2().toString());
+        // out.println("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" + node.getId1().toString());
+        // out.println("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" + node.getId2().toString());
     }
 
 

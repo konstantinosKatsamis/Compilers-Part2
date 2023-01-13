@@ -62,7 +62,7 @@ public class Visitor2 extends DepthFirstAdapter{
     // we declear a new list so we need to keep track of what value type it is
     @Override
     public void inAAssignListStatement(AAssignListStatement node){
-        out.println(" -- inAAssignListStatement -- ");
+        // out.println(" -- inAAssignListStatement -- ");
         String vName = node.getIdentifier().toString();
         variables.put(vName, getExpressionType(node.getEx1()));
     }
@@ -76,7 +76,7 @@ public class Visitor2 extends DepthFirstAdapter{
     // save function's argument model.Types temprarly
     @Override
     public void inAArglistArglist(AArglistArglist node){
-        out.println("OUT_ARGLIST-----------------------------");
+        // out.println("OUT_ARGLIST-----------------------------");
         if(curFunc != null)
         {
             curFunc.args.add(getExpressionType(node.getExpression()));
@@ -86,12 +86,12 @@ public class Visitor2 extends DepthFirstAdapter{
     // save function's argument model.Types
     @Override
     public void outAArglistArglist(AArglistArglist node){
-        System.out.println("IN_ARGLIST-----------------------------");
+        // System.out.println("IN_ARGLIST-----------------------------");
         // if current function != null we are ok to put the arguments in the correct fynction
         if (curFunc != null){
             String fName = curFunc.name;
             //Object temp = node.getCommaExpression();
-            System.out.println(node.getExpression().toString());
+            // System.out.println(node.getExpression().toString());
         
         }
     }
@@ -108,7 +108,7 @@ public class Visitor2 extends DepthFirstAdapter{
 
             // For each parameter see its type equal to the functioncall parameter types
             for(int i=0; i<curFunc.args.size(); i++){
-                System.out.println(curFunc.args.get(i));
+                // System.out.println(curFunc.args.get(i));
                 variables.put(fTypes[i], curFunc.args.get(i));
             }
             // get its type
@@ -119,17 +119,17 @@ public class Visitor2 extends DepthFirstAdapter{
     // save functions's argument utils.Types
     @Override
     public void inAArgument(AArgument node){
-        out.println("inFunc -- let see if we got args:");
-        out.println(node.getId1());
+        // out.println("inFunc -- let see if we got args:");
+        // out.println(node.getId1());
         if(curFunc != null){
-            out.println(node.getId1());
+            // out.println(node.getId1());
             //curFunc.args.add(getExpressionType(node.getId2().toString()));
         }
     }
 
     @Override
     public void outAArgument(AArgument node){
-        out.println("outFunc -- let see if we got args:");
+        // out.println("outFunc -- let see if we got args:");
     }
 
 
@@ -235,13 +235,13 @@ public class Visitor2 extends DepthFirstAdapter{
     private FunctionData getFunctionData(AFunctionCall node, boolean print)
     {
         // out.println("kalimeraaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-        out.println(node.getExpression());
+        // out.println(node.getExpression());
         //if we cannot find it then print error
         if(!functions.containsKey(node.getIdentifier().toString()))
         {
             if(print)
             {
-                out.println("from getFunctionData: ");
+                // out.println("from getFunctionData: ");
                 notDefined(node.getIdentifier().getLine(), "Function", node.getIdentifier().toString());
             }
         }
@@ -315,32 +315,6 @@ public class Visitor2 extends DepthFirstAdapter{
         }
         
         return true;
-    }
-
-    public void kaleseme(){
-        out.println("\nH PATENTA THS PATENTAS MESA DA");
-        for (Map.Entry<String, LinkedList<FunctionData>> entry : functions.entrySet()) {
-            String key = entry.getKey();
-            LinkedList<FunctionData> value = entry.getValue();
-            System.out.println("Functions with key: " + key);
-            for (FunctionData functionData : value) {
-                System.out.println("Name: " + functionData.getName());
-                System.out.println("Type: " + functionData.getType());
-                System.out.println("Return expression: " + functionData.getReturnExpression());
-                functionData.printArguments();
-                
-                // and so on for other fields
-            }
-        }
-
-
-        for (Map.Entry<String, Types> entry : variables.entrySet()) {
-            String key = entry.getKey();
-            Types value = entry.getValue();
-            System.out.println("Key: " + key + ", Value: " + value);
-        }
-        
-
     }
 
     private void notDefined(int line, String type, String name)

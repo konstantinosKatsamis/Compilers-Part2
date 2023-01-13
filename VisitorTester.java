@@ -29,7 +29,6 @@ public class VisitorTester
             ast.apply(new Visitor1(functions, variables));
             Visitor2 visitor2 = new Visitor2(functions, variables, functionCalls);
             ast.apply(visitor2);
-            // visitor2.kaleseme();
             // visitor2.printFunctionsData();
             // visitor2.printFunctionCalls();
 
