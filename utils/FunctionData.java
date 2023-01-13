@@ -10,15 +10,23 @@ public class FunctionData {
     private Types type;
     private PExpression returnExpression = null;
     private int numOfArguments;
-    private boolean hasDefault;
+    private int defaultArguments, nonDefaultArguments;
 
-    public boolean isHasDefault() {
-        return hasDefault;
+    public int getNonDefaultArguments() {
+        return nonDefaultArguments;
     }
 
-    public void setHasDefault(boolean hasDefault) {
-        this.hasDefault = hasDefault;
+    public void setNonDefaultArguments(int nonDefaultArguments) {
+        this.nonDefaultArguments = nonDefaultArguments;
     }
+
+    public int getDefaultArguments() {
+        return defaultArguments;
+    }
+
+    public void setDefaultArguments(int defaultArguments) {
+        this.defaultArguments = defaultArguments;
+    }   
 
     public int getNumOfArguments() {
         return numOfArguments;

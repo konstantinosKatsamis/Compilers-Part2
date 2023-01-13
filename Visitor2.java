@@ -300,7 +300,7 @@ public class Visitor2 extends DepthFirstAdapter{
             LinkedList<FunctionData> funcList = functions.get(funcName);
             for (FunctionData funcData : funcList) {
                 out.println("Function name: " + funcData.getName());
-                out.println("Arguments - " + funcData.arguments.size() + ":");
+                out.println("Arguments - " + funcData.arguments.size() + " | Default args - " + funcData.getDefaultArguments() + " | Non Default args - " + funcData.getNonDefaultArguments());
                 for (Map.Entry<String, Types> entry : funcData.arguments.entrySet()) {
                     out.println("    " + entry.getKey() + ": " + entry.getValue());
                 }
