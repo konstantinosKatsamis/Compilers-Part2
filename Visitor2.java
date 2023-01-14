@@ -68,12 +68,6 @@ public class Visitor2 extends DepthFirstAdapter{
 
     @Override
     public void inATypeExpression(ATypeExpression node) {
-        out.println(node.getClass().toString());
-        TIdentifier typeExpr = node.getIdentifier();
-        out.println(typeExpr.getClass());
-        out.println(typeExpr.getLine());
-        out.println(typeExpr.getPos());
-        out.println(typeExpr.getText());
     }
 
     // save function's argument model.Types
@@ -110,7 +104,7 @@ public class Visitor2 extends DepthFirstAdapter{
         }
     }
 
-    // for every arithmetic like +, -, *, /
+    // for every arithmetic like +, -, *, /, **
     @Override
     public void outAArithmeticExpression(AArithmeticExpression node){
         PExpression a = node.getE1();
@@ -205,7 +199,6 @@ public class Visitor2 extends DepthFirstAdapter{
 
     private FunctionData getFunctionData(AFunctionCall node, boolean print)
     {
-        // out.println("kalimeraaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
         //if we cannot find it then print error
         if(!functions.containsKey(node.getIdentifier().toString()))
         {

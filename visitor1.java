@@ -5,7 +5,6 @@ import java.lang.String;
 import static java.lang.System.out;
 
 import minipython.analysis.DepthFirstAdapter;
-import minipython.node.AFunction;
 import utils.FunctionData;
 import utils.Types;
 import minipython.node.*;
@@ -23,7 +22,6 @@ public class Visitor1 extends DepthFirstAdapter{
     // we got in a new function, so we create a new FunctionData object
     @Override
     public void inAFunction(AFunction node){
-        // out.println(" ====== in A Function =======");
         Hashtable<String, Types> temp_args = new Hashtable<>();
         LinkedList<AIdentifierValue> idefs = node.getIdentifierValue();
         int def_args = 0, non_def_args = 0;
@@ -35,11 +33,14 @@ public class Visitor1 extends DepthFirstAdapter{
             }
             temp_args.put(i.getIdentifier().toString(), getValueType(i.getValue()));
         }
-        // out.println("Default args: " + def_args + "\nNON Def args: " + non_def_args);
         /*for (Map.Entry<String, Types> entry : temp_args.entrySet()) {
             System.out.println(entry.getKey() + ": " + entry.getValue());
         }*/
+        out.println("getStatement(): " + node.getStatement().toString());
+        out.println("getStatement(): " + node.getStatement());
+        PStatement pStatement = node.getStatement();
         
+        out.println("dameeeeeeeeeeeeeeeeeeeeeeeeeeee " + node.getIdentifier().toString());
         currentFunc = new FunctionData(node.getIdentifier().toString()); //new FunctionData(node.getId().toString());
         currentFunc.arguments = temp_args; 
         currentFunc.setDefaultArguments(def_args);               
@@ -55,23 +56,10 @@ public class Visitor1 extends DepthFirstAdapter{
             for(FunctionData f: functions.get(currentFunc.getName())){
                 // and check if there is a function with same arguments
                 if((f.getArgumentsSize() == currentFunc.getArgumentsSize())){ // katastrofikos elegxos: f.getArguments() == currentFunc.getArguments())
-                    // out.println(" =-==-=-==-=-=-=-=-=-=-==-=-=-=-=-=-=-==-=-=- alreadyDefinedFunction from check 1");
-                    // out.println(" ------------ ----------- ---------- f.getArguments(): " + f.getArguments());
-                    // out.println(" ------------ ----------- ---------- currentFunc.getArguments(): " + currentFunc.getArguments());
-                    // out.println(" ------------ ----------- ---------- f.getArgumentsSize(): " + f.getArgumentsSize());
-                    // out.println(" ------------ ----------- ---------- currentFunc.getArgumentsSize(): " + currentFunc.getArgumentsSize());
                     alreadyDefinedFunction(((TIdentifier) node.getIdentifier()).getLine(), currentFunc.getName());
                     return;
                 }
                 if(f.getNonDefaultArguments() == currentFunc.getNonDefaultArguments()){
-                    // out.println(" =-==-=-==-=-=-=-=-=-=-==-=-=-=-=-=-=-==-=-=- alreadyDefinedFunction from check 2");
-                    // out.println(" ------------ ----------- ---------- f.getNonDefaultArguments(): " + f.getNonDefaultArguments());
-                    // out.println(" ------------ ----------- ---------- currentFunc.getNonDefaultArguments(): " + currentFunc.getNonDefaultArguments());
-                    
-                    // out.println(" ------------ ----------- ---------- f.getArguments(): " + f.getArguments());
-                    // out.println(" ------------ ----------- ---------- currentFunc.getArguments(): " + currentFunc.getArguments());
-                    // out.println(" ------------ ----------- ---------- f.getArgumentsSize(): " + f.getArgumentsSize());
-                    // out.println(" ------------ ----------- ---------- currentFunc.getArgumentsSize(): " + currentFunc.getArgumentsSize());
                     alreadyDefinedFunction(((TIdentifier) node.getIdentifier()).getLine(), currentFunc.getName());
                     return;
                 }
@@ -96,15 +84,21 @@ public class Visitor1 extends DepthFirstAdapter{
     // keep the expression of the return statement
     @Override
     public void inAReturnStatement(AReturnStatement node){
+        out.println("inAReturnStatement: Function name = " + currentFunc.getName() + ", ReturnStatement = " +  node.getExpression());
         currentFunc.setReturnExpression(node.getExpression());
-        currentFunc.setReturnExpression(node.getExpression());
+        PExpression pexpr =  node.getExpression();
+        
+    }
+
+    @Override
+    public void outAArgument(AArgument node) {
+        out.println("outAArgument");
     }
 
     @Override
     public void inAArgument(AArgument node){
+        out.println("inAArgument");
         // LinkedList<> lls =  node.getId2();
-        // out.println("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" + node.getId1().toString());
-        // out.println("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" + node.getId2().toString());
     }
 
     public Types getValueType(PValue value)
