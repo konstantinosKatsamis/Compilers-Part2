@@ -5,7 +5,6 @@ import java.util.Hashtable;
 import utils.*;
 import minipython.node.*;
 import static java.lang.System.out;
-import java.beans.Expression;
 import java.util.*;
 
 import minipython.analysis.DepthFirstAdapter;
@@ -18,10 +17,8 @@ public class Visitor2 extends DepthFirstAdapter{
     private Hashtable<String, Types> variables;
 
     private FunctionCalls curFunc = null;
-
-    private boolean inPrint = false;
+    // private boolean inPrint = false; del
     private boolean inReturn = false;
-
     private int curLine = 0;
 
     public Visitor2(Hashtable<String, LinkedList<FunctionData>> functions, Hashtable<String, Types> vars, Hashtable<String, FunctionCalls> functionCalls)
@@ -51,12 +48,6 @@ public class Visitor2 extends DepthFirstAdapter{
         variables.put(vName, getExpressionType(node.getEx1()));
     }
 
-    // we found a new FunctionCall so we create a new functionData
-    @Override
-    public void inAFunctionCall(AFunctionCall node){
-        curFunc = new FunctionCalls(node.getIdentifier().toString());
-    }
-
     // save function's argument model.Types temprarly
     @Override
     public void inAArglistArglist(AArglistArglist node){
@@ -79,11 +70,18 @@ public class Visitor2 extends DepthFirstAdapter{
         }
     }
 
+    // we found a new FunctionCall so we create a new functionData
+    @Override
+    public void inAFunctionCall(AFunctionCall node){
+        curFunc = new FunctionCalls(node.getIdentifier().toString());
+    }
+
     // we leaving the !!!!function call!!! so we need to check if the arguments are correct and get its return type
     @Override
     public void outAFunctionCall(AFunctionCall node){
         // get functionData and print error if not found
         FunctionData f = getFunctionData(node, true);
+        
         if(f != null){
             // make String array of all parameter names of found function that we are calling
             String [] fTypes = f.arguments.keySet().toArray(new String[f.arguments.size()]);
@@ -220,7 +218,7 @@ public class Visitor2 extends DepthFirstAdapter{
                 }
             }
             //If nothing found print an error
-            System.err.println("Line " + node.getIdentifier().getLine() + ": Arguments for function " + curFunc.name + " do not match any overload");
+            System.err.println("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEError: Line " + node.getIdentifier().getLine() + ": Arguments for function " + curFunc.name + " do not match any overload");
         }
         return null;
     }
@@ -278,7 +276,7 @@ public class Visitor2 extends DepthFirstAdapter{
 
     private void notDefined(int line, String type, String name)
     {
-        System.err.println("Line " + line + ": " + type + ' ' + name + "is not defined");
+        System.err.println("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEError: Line " + line + ": " + type + ' ' + name + "is not defined");
     }
 
     // Temp del functions
@@ -312,6 +310,14 @@ public class Visitor2 extends DepthFirstAdapter{
                 System.out.println("    " + callLocation);
             }*/
         }
+    }
+
+    public void printAllVariables(){
+        out.println("\nPrinting all Variables:");
+        for (Map.Entry<String, Types> entry : variables.entrySet()) {
+            out.println("Key: " + entry.getKey() + ", Value: " + entry.getValue());
+        }
+        
     }
 
 }

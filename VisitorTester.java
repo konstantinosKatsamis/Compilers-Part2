@@ -26,11 +26,15 @@ public class VisitorTester
             Hashtable<String, FunctionCalls> functionCalls = new Hashtable<>();
 
             Start ast = parser.parse();
+            Visitor1 visitor1 = new Visitor1(functions, variables);
             ast.apply(new Visitor1(functions, variables));
+            // visitor1.printFunctionsData();
+
             Visitor2 visitor2 = new Visitor2(functions, variables, functionCalls);
             ast.apply(visitor2);
-            // visitor2.printFunctionsData();
-            // visitor2.printFunctionCalls();
+            visitor2.printFunctionsData();
+            visitor2.printFunctionCalls();
+            visitor2.printAllVariables();
 
       /*
      Hashtable symtable =  new Hashtable();

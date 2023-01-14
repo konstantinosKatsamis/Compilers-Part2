@@ -13,6 +13,7 @@ public class Visitor1 extends DepthFirstAdapter{
     private Hashtable<String, LinkedList<FunctionData>> functions;
     private Hashtable<String, Types> variables;
     private FunctionData currentFunc;
+    private Hashtable<String, Types> tempVars = new Hashtable<>();
 
     public Visitor1(Hashtable<String, LinkedList<FunctionData>> functions, Hashtable<String, Types> variables){
         this.functions = functions;
@@ -26,6 +27,11 @@ public class Visitor1 extends DepthFirstAdapter{
         LinkedList<AIdentifierValue> idefs = node.getIdentifierValue();
         int def_args = 0, non_def_args = 0;
         for(AIdentifierValue i: idefs){
+            try{                
+                tempVars.put(i.getIdentifier().toString(), getValueType(i.getValue()));
+            }catch(Exception e) {
+                out.println("EXCEPTION inAFunction");
+            }
             if(getValueType(i.getValue()) == Types.NULL){
                 non_def_args++;
             } else{
@@ -65,12 +71,18 @@ public class Visitor1 extends DepthFirstAdapter{
         LinkedList<FunctionData> temp = new LinkedList<>();
         temp.add(currentFunc);
         functions.put(currentFunc.getName(), temp);
+        try{
+            variables.putAll(tempVars);
+            tempVars.clear();
+        }catch(Exception e){
+            out.println("EXCEPTION outAFunction");
+        }
     }
 
     private void alreadyDefinedFunction(int line, String name)
 	{
 		name = name.substring(0, name.lastIndexOf(' '));
-		System.err.println("Line " + line + ": " + "Function" + ' ' + name + " is already defined!");
+		System.err.println("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEError: Line " + line + ": " + "Function" + ' ' + name + " is already defined!");
 	}
 
     // keep the expression of the return statement
