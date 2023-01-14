@@ -32,15 +32,7 @@ public class Visitor1 extends DepthFirstAdapter{
                 def_args++;
             }
             temp_args.put(i.getIdentifier().toString(), getValueType(i.getValue()));
-        }
-        /*for (Map.Entry<String, Types> entry : temp_args.entrySet()) {
-            System.out.println(entry.getKey() + ": " + entry.getValue());
-        }*/
-        out.println("getStatement(): " + node.getStatement().toString());
-        out.println("getStatement(): " + node.getStatement());
-        PStatement pStatement = node.getStatement();
-        
-        out.println("dameeeeeeeeeeeeeeeeeeeeeeeeeeee " + node.getIdentifier().toString());
+        }        
         currentFunc = new FunctionData(node.getIdentifier().toString()); //new FunctionData(node.getId().toString());
         currentFunc.arguments = temp_args; 
         currentFunc.setDefaultArguments(def_args);               
@@ -84,7 +76,7 @@ public class Visitor1 extends DepthFirstAdapter{
     // keep the expression of the return statement
     @Override
     public void inAReturnStatement(AReturnStatement node){
-        out.println("inAReturnStatement: Function name = " + currentFunc.getName() + ", ReturnStatement = " +  node.getExpression());
+        // out.println("inAReturnStatement: Function name = " + currentFunc.getName() + ", ReturnStatement = " +  node.getExpression());
         currentFunc.setReturnExpression(node.getExpression());
         PExpression pexpr =  node.getExpression();
         
@@ -92,12 +84,12 @@ public class Visitor1 extends DepthFirstAdapter{
 
     @Override
     public void outAArgument(AArgument node) {
-        out.println("outAArgument");
+        // out.println("outAArgument");
     }
 
     @Override
     public void inAArgument(AArgument node){
-        out.println("inAArgument");
+        // out.println("inAArgument");
         // LinkedList<> lls =  node.getId2();
     }
 
