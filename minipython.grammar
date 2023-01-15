@@ -1,7 +1,7 @@
 /*
-* Konstantinos Andrinopoulos
-* Giorgos Kouros
-* Konstantinos Katsamis
+* Konstantinos Andrinopoulos 3190009
+* Giorgos Kouros 3190095
+* Konstantinos Katsamis 3190237
 */
 
 Package minipython;
@@ -15,9 +15,7 @@ Helpers
 	eol = lf | cr | cr lf ;
 	not_eol = [all - [cr + lf]];
 	d_quote = '"';
-	not_d_quote = [all - d_quote];
-    	s_quote = ''';
-	not_s_quote = [all - s_quote];
+    s_quote = ''';
 
 Tokens
 	line_comment = '#' not_eol* eol; 
@@ -35,15 +33,12 @@ Tokens
 	qmark = '?';
 	semi = ':';
     dot = '.';
-
 	plus = '+';
 	minus = '-';
 	mult = '*';
 	div = '/';
 	mode = '%';
 	dmult = '**';
-
-
 	if = 'if';
 	in = 'in';
 	elif = 'elif';
@@ -60,22 +55,17 @@ Tokens
 	dictt = 'dict';
 	def = 'def';
 	none = 'None';
-
-
 	leq = '<=';
 	less = '<';
 	geq = '>=';
 	great = '>';
 	neq = '!=';
 	eq = '==';
-
 	true = 'true';
 	false = 'false';
-
 	and = 'and';
 	or = 'or';
 	not = 'not';
-
 	quote = '"';
 	blank = (' ' | lf | cr);
 	integer_literal = digit+ | (digit+ '.' digit+);
@@ -148,12 +138,12 @@ Productions
 		{identifier} identifier {-> New expression.identifier(identifier)};
 	  
 
-    comparison = disjunction {-> disjunction.comparison};
+    comparison = separation {-> separation.comparison};
 
-    disjunction{-> comparison} = {or} disjunction or conjuction {-> New comparison.or(disjunction.comparison, conjuction.comparison)}|
-		                         {and} conjuction {-> conjuction.comparison};
+    separation{-> comparison} = {or} separation or join {-> New comparison.or(separation.comparison, join.comparison)}|
+		                         {and} join {-> join.comparison};
 
-    conjuction{-> comparison} = {and} conjuction and negated {-> New comparison.and(conjuction.comparison, negated.comparison)}|
+    join{-> comparison} = {and} join and negated {-> New comparison.and(join.comparison, negated.comparison)}|
 		                        {not} negated {-> negated.comparison};
 
     negated{-> comparison} = {negated} not clause {-> New comparison.not(clause.comparison)}|
@@ -165,9 +155,9 @@ Productions
 	     {geq} [lhs]: expression geq [rhs]: expression {-> New comparison.geq(lhs,rhs)}|
 	     {neq} [lhs]: expression neq [rhs]: expression {-> New comparison.neq(lhs,rhs)}|
 	     {eq} [lhs]: expression eq [rhs]: expression {-> New comparison.eq(lhs,rhs)}|
-	     {literal} boolean_literal {-> boolean_literal.comparison};
+	     {literal} bool_ltl {-> bool_ltl.comparison};
 
-    boolean_literal{-> comparison} = {true} true {-> New comparison.true()}|
+    bool_ltl{-> comparison} = {true} true {-> New comparison.true()}|
                                     {false} false {-> New comparison.false()};
 
     value{-> value} = {fun_call}identifier dot function_call {-> New value.method(identifier, function_call)}|
