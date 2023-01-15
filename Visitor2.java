@@ -1,7 +1,6 @@
 import java.util.Hashtable;
 
 
-
 import utils.*;
 import minipython.node.*;
 import static java.lang.System.out;
@@ -76,12 +75,35 @@ public class Visitor2 extends DepthFirstAdapter{
         curFunc = new FunctionCalls(node.getIdentifier().toString());
     }
 
-    // we leaving the !!!!function call!!! so we need to check if the arguments are correct and get its return type
+    // we leaving the function call so we need to check if the arguments are correct and get its return type
     @Override
     public void outAFunctionCall(AFunctionCall node){
-        // get functionData and print error if not found
+        // get functionData
         FunctionData f = getFunctionData(node, true);
+        TIdentifier tIdentline =  node.getIdentifier();
+        int line = tIdentline.getLine();  // out.println(f.getName()); // kserw oti ekalesen th sosth methodo
+        Types returnType = f.getType();   // out.println(f.getType()); // kserw oti eshei sosto tipo epistrofis
         
+        // for each argument of a function call
+        Object [] strArr = node.getExpression().toArray();
+        for(Object s: strArr){
+            String he = s.toString();
+            he = he.trim();
+            if(variables.containsKey(s.toString())){
+                Types valuehe = variables.get(s.toString());
+                if(returnType != valuehe){
+                    functionCallError( Integer.toString(line), f.getName(), returnType.toString(), valuehe.toString());
+                }
+            }
+            // check a number argument
+            if(he.matches("[-+]?[0-9]*\\.?[0-9]+") && returnType == Types.STRING){
+                functionCallError( Integer.toString(line), f.getName(), returnType.toString(), "NUMERIC");
+            }
+            // check a String argument
+            // ??
+        }
+        
+              
         if(f != null){
             // make String array of all parameter names of found function that we are calling
             String [] fTypes = f.arguments.keySet().toArray(new String[f.arguments.size()]);
@@ -274,6 +296,10 @@ public class Visitor2 extends DepthFirstAdapter{
         return true;
     }
 
+    private void functionCallError(String line, String funcName, String correctType, String wrongType){
+        System.err.println("Error: Line " + line + ": Function " + funcName + "takes " + correctType + " arguments. No " + wrongType);
+    }
+
     private void notDefined(int line, String type, String name)
     {
         System.err.println("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEError: Line " + line + ": " + type + ' ' + name + "is not defined");
@@ -315,7 +341,7 @@ public class Visitor2 extends DepthFirstAdapter{
     public void printAllVariables(){
         out.println("\nPrinting all Variables:");
         for (Map.Entry<String, Types> entry : variables.entrySet()) {
-            out.println("Key: " + entry.getKey() + ", Value: " + entry.getValue());
+            out.println("Key:" + entry.getKey() + ",Value:" + entry.getValue());
         }
         
     }

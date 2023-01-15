@@ -1,6 +1,6 @@
 
 
-
+k=12
 
 # simio 5:
 # x = 5 + None # touto doulefkei
@@ -8,20 +8,17 @@
 
 # simio 4: xrisi metavlitis diaforetikou tipou
 def add2(x, y):
-    return x + y
-k="hello world"
-print add2(2,k)
+    return "1 + 1"
 
-def avoidmethod():
-    return "ha"
+kaaaaaaaaaaaaaaaa = "hello world"
+print add2(1, k)
 
 
 
 # simio 3: lathos orismos orismatwn:
-def add3(num1, num2=2):
-    return num1 + num2
+    #def add3(num1, num2=2):
+    #    return num1 + num2
+    # print add3(1, 2, 3)
 
-print add3(1, 2, 3)
 
-add2(2, k)
 

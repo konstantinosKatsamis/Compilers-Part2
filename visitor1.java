@@ -23,6 +23,7 @@ public class Visitor1 extends DepthFirstAdapter{
     // we got in a new function, so we create a new FunctionData object
     @Override
     public void inAFunction(AFunction node){
+        
         Hashtable<String, Types> temp_args = new Hashtable<>();
         LinkedList<AIdentifierValue> idefs = node.getIdentifierValue();
         int def_args = 0, non_def_args = 0;
@@ -77,6 +78,7 @@ public class Visitor1 extends DepthFirstAdapter{
         }catch(Exception e){
             out.println("EXCEPTION outAFunction");
         }
+        // printFunctionsData();
     }
 
     private void alreadyDefinedFunction(int line, String name)

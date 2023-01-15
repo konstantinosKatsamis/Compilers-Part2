@@ -1,7 +1,7 @@
 package utils;
 
 import java.util.Hashtable;
-
+import static java.lang.System.out;
 import minipython.node.PExpression;
 
 public class FunctionData {
@@ -85,11 +85,18 @@ public class FunctionData {
     }
 
     // temp - del function
+
+    public void printAllData(){
+        out.println("Name: " + name);
+        printArguments();
+        out.println("Type: " + type);
+        out.println("Return Expression: " + returnExpression);
+        out.println("numofArguments: " + arguments.size());
+    }
     
     public void printArguments(){
-        //System.out.println("-----------------------------------------------------------------Printing arguments");
         for (Types value : arguments.values()) {
-            System.out.println("Value: " + value + ", Key: " + arguments.entrySet().stream().filter(entry -> value.equals(entry.getValue())).findFirst().get().getKey());
+            out.println("Value: " + value + ", Key: " + arguments.entrySet().stream().filter(entry -> value.equals(entry.getValue())).findFirst().get().getKey());
         }
     }
 
