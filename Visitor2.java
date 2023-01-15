@@ -116,8 +116,8 @@ public class Visitor2 extends DepthFirstAdapter{
     // for every arithmetic like +, -, *, /, **
     @Override
     public void outAArithmeticExpression(AArithmeticExpression node){
-        PExpression a = node.getE1();
-        PExpression b = node.getE2();
+        PExpression a = node.getExpr1();
+        PExpression b = node.getExpr2();
         getOperationType(a, b);
     }
 
