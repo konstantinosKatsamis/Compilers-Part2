@@ -83,8 +83,20 @@ public class Visitor2 extends DepthFirstAdapter{
         FunctionData f = getFunctionData(node, true);
         if(f != null){
             TIdentifier tIdentline =  node.getIdentifier();
-            int line = tIdentline.getLine();  // out.println(f.getName()); // kserw oti ekalesen th sosth methodo
+            int line = tIdentline.getLine();
             Types returnType = f.getType();   // out.println(f.getType()); // kserw oti eshei sosto tipo epistrofis
+            
+            // print error if the rumber of the args is wrong
+            int argsOfFuncCall = node.getExpression().size();
+            int argsOfOriginalFunc = f.getArgumentsSize();
+            if(argsOfFuncCall > argsOfOriginalFunc){
+                functionCallErrorArgsNumber(0, Integer.toString(line), f.getName(), argsOfOriginalFunc, argsOfFuncCall);
+            }
+            if(argsOfFuncCall < f.getNonDefaultArguments()){
+                functionCallErrorArgsNumber(1, Integer.toString(line), f.getName(), f.getNonDefaultArguments(), argsOfFuncCall);
+            }
+
+            // print error if the given arg has wrong type
             // for each argument of a function call
             Object [] strArr = node.getExpression().toArray();
             for(Object s: strArr){
@@ -93,18 +105,14 @@ public class Visitor2 extends DepthFirstAdapter{
                 if(variables.containsKey(s.toString())){
                     Types valuehe = variables.get(s.toString());
                     if(returnType != valuehe){
-                        functionCallError( Integer.toString(line), f.getName(), returnType.toString(), valuehe.toString());
+                        functionCallErrorType(Integer.toString(line), f.getName(), returnType.toString(), valuehe.toString());
                     }
                 }
                 // check a number argument
                 if(he.matches("[-+]?[0-9]*\\.?[0-9]+") && returnType == Types.STRING){
-                    functionCallError( Integer.toString(line), f.getName(), returnType.toString(), "NUMERIC");
+                    functionCallErrorType(Integer.toString(line), f.getName(), returnType.toString(), "NUMERIC");
                 }
-                // check a String argument
-                // ??
             }
-        
-              
         
             // make String array of all parameter names of found function that we are calling
             String [] fTypes = f.arguments.keySet().toArray(new String[f.arguments.size()]);
@@ -297,8 +305,16 @@ public class Visitor2 extends DepthFirstAdapter{
         return true;
     }
 
-    private void functionCallError(String line, String funcName, String correctType, String wrongType){
+    private void functionCallErrorType(String line, String funcName, String correctType, String wrongType){
         System.err.println("Error: Line " + line + ": Function " + funcName + "takes " + correctType + " arguments. No " + wrongType);
+    }
+    
+    private void functionCallErrorArgsNumber(int bit, String line, String funcName, int originalArgs, int givenArgs){
+        if(bit == 0){
+            System.err.println("Error: Line " + line + ": Function " + funcName + "takes " + originalArgs + " arguments. No " + givenArgs);
+        } else{
+            System.err.println("Error: Line " + line + ": Function " + funcName + "takes at least " + originalArgs + " arguments. No " + givenArgs);
+        }
     }
 
     private void notDefined(int line, String type, String name)
@@ -322,7 +338,6 @@ public class Visitor2 extends DepthFirstAdapter{
             }
             out.println();
         }
-        
     }
 
     public void printFunctionCalls(){
@@ -333,9 +348,6 @@ public class Visitor2 extends DepthFirstAdapter{
             out.println("Number of calls: " + func.getCalls());
             out.println("Call locations:");
             func.printArguments();
-            /*for (String callLocation : func.getCallLocations()) {
-                System.out.println("    " + callLocation);
-            }*/
         }
     }
 
@@ -344,7 +356,6 @@ public class Visitor2 extends DepthFirstAdapter{
         for (Map.Entry<String, Types> entry : variables.entrySet()) {
             out.println("Key:" + entry.getKey() + ",Value:" + entry.getValue());
         }
-        
     }
 
 }
