@@ -28,10 +28,13 @@ public class VisitorTester
             Start ast = parser.parse();
             Visitor1 visitor1 = new Visitor1(functions, variables);
             ast.apply(new Visitor1(functions, variables));
+            // System.out.println("\nAND FINALY WE GOT FROM VISITOR1:\n");
             // visitor1.printFunctionsData();
+            // visitor1.printAllVariables();
 
             Visitor2 visitor2 = new Visitor2(functions, variables, functionCalls);
             ast.apply(visitor2);
+            // System.out.println("\n\nAND FINALY WE GOT FROM VISITOR2:\n");
             // visitor2.printFunctionsData();
             // visitor2.printFunctionCalls();
             // visitor2.printAllVariables();

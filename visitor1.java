@@ -1,6 +1,9 @@
 
 
 import java.util.*;
+
+import javax.swing.tree.VariableHeightLayoutCache;
+
 import utils.*;
 import java.lang.String;
 import static java.lang.System.out;
@@ -91,16 +94,28 @@ public class Visitor1 extends DepthFirstAdapter{
 
     @Override
     public void outAFunctionCall(AFunctionCall node){
+        // printFunctionsData(); out.println();
+        // printAllVariables(); out.println();
+        
         FunctionData f = getFunctionData(node, true);
         if(f != null){
-            // make String array of all parameter names of found function that we are calling
-            String [] fTypes = f.arguments.keySet().toArray(new String[f.arguments.size()]);
-            // For each parameter see its type equal to the functioncall parameter types
-            for(int i=0; i<curFunc.args.size(); i++){
-                variables.put(fTypes[i], curFunc.args.get(i));
-            }
             // get its type
+            Types type = getExpressionType(f.getReturnExpression());
+            // out.println("Type of function: " + type);
             f.setType(getExpressionType(f.getReturnExpression()));
+            Hashtable<String, Types> tempArgs = f.getArgumHashtable();
+
+            // For each parameter see its type equal to the functioncall parameter types
+            for (Map.Entry<String, Types> entry : tempArgs.entrySet()) {
+                String key = entry.getKey();
+                Types value = entry.getValue();
+                // out.println("Key: " + key + ", Value: " + value);
+                // out.println("i have the " + key + ": " + variables.containsKey(key));
+                variables.replace(key, type);
+            }
+            // printFunctionsData();
+            // printAllVariables(); out.println();
+            updateFunctionsVariables();
         }
     }
 
@@ -219,6 +234,24 @@ public class Visitor1 extends DepthFirstAdapter{
         }
     }
 
+    private void updateFunctionsVariables(){
+        for (String funcName : functions.keySet()) {
+            LinkedList<FunctionData> funcList = functions.get(funcName);
+            for (FunctionData funcData : funcList) {
+                // out.println("prin to update:");
+                // funcData.printArguments(); out.println();
+                for (Map.Entry<String, Types> entry : funcData.arguments.entrySet()) {
+                    if(variables.containsKey(entry.getKey())){
+                        Types value = variables.get(entry.getKey());
+                        funcData.arguments.replace(entry.getKey(), value);
+                    }
+                }
+                // out.println("\nmeta to update:");
+                // funcData.printArguments(); out.println();
+            }
+        }
+    }
+
     // temp - del functions
     public void printFunctionsData(){
         for (String funcName : functions.keySet()) {
@@ -233,6 +266,13 @@ public class Visitor1 extends DepthFirstAdapter{
                 out.println("Return expression: " + funcData.getReturnExpression());
             }
             out.println();
+        }
+    }
+
+    public void printAllVariables(){
+        out.println("\nPrinting all Variables:");
+        for (Map.Entry<String, Types> entry : variables.entrySet()) {
+            out.println("Key:" + entry.getKey() + ",Value:" + entry.getValue());
         }
     }
 

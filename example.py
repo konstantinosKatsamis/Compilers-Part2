@@ -23,9 +23,10 @@
 
 
     ##################### 3 TODO
-# def add(x,y=2):
-#     return x + y
-# print add(1)
+azagira = "1"
+def add(x,y=2):
+    return x + y
+print add(1)
 
 #def add3(num1, num2=2):
 #    return num1 + num2

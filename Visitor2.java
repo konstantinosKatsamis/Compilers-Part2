@@ -25,6 +25,7 @@ public class Visitor2 extends DepthFirstAdapter{
         this.functions = functions;
         this.variables = vars;
         this.functionCalls = functionCalls;
+        // printFunctionsData();
     }
 
     // we just found a use of a identifier so we check if it has been decleared

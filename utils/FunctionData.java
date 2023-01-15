@@ -12,6 +12,10 @@ public class FunctionData {
     private int numOfArguments;
     private int defaultArguments, nonDefaultArguments;
 
+    public void setArguments(Hashtable<String, Types> newArgs){
+        this.arguments = newArgs;
+    }
+
     public int getNonDefaultArguments() {
         return nonDefaultArguments;
     }
