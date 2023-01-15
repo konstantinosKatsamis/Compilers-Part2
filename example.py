@@ -2,6 +2,7 @@
     ##################### 1
 # def add(x,y):
 #     return x + y
+
 # print k
 
 # def add(x,y):
@@ -28,7 +29,12 @@
 #     return x + y
 # print add(1, 2, 3, 4)
 
-#def add3(num1, num2=2):
+# azagira = "1"
+# def add(x, b, y=2):
+#     return x + y
+# print add(1)
+
+# def add3(num1, num2=2):
 #    return num1 + num2
 # print add3(1, 2, 3)
 
@@ -84,7 +90,6 @@
 # def add(x,y,z=1):
 #     return x + y + z
 
-def func(x, y, z=1):
-    return x + y + z
+# def func(x, y, z=1):
+#     return x + y + z
 
-print func("1", 2)
