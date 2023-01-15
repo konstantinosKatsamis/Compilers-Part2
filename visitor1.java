@@ -1,7 +1,4 @@
-
-
 import java.util.*;
-
 
 import utils.*;
 import java.lang.String;
@@ -104,7 +101,6 @@ public class Visitor1 extends DepthFirstAdapter{
             for (Map.Entry<String, Types> entry : tempArgs.entrySet()) {
                 String key = entry.getKey();
                 Types value = entry.getValue();
-                // out.println("Key: " + key + ", Value: " + value);
                 variables.replace(key, type);
             }
             updateFunctionsVariables();
@@ -132,7 +128,7 @@ public class Visitor1 extends DepthFirstAdapter{
 
     private void notDefined(int line, String type, String name)
     {
-        System.err.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA1Error: Line " + line + ": " + type + ' ' + name + "is not defined");
+        System.err.println("Error: Line " + line + ": " + type + ' ' + name + "is not defined");
     }
 
     private FunctionData getFunctionData(AFunctionCall node, boolean print)
@@ -175,16 +171,6 @@ public class Visitor1 extends DepthFirstAdapter{
         currentFunc.setReturnExpression(node.getExpression());        
     }
 
-    @Override
-    public void outAArgument(AArgument node) {
-        out.println("outAArgument");
-    }
-
-    @Override
-    public void inAArgument(AArgument node){
-        out.println("INAArgument");
-    }
-
     public Types getValueType(PValue value)
     {
         if(value instanceof AStringValue){
@@ -216,30 +202,6 @@ public class Visitor1 extends DepthFirstAdapter{
                     }
                 }
             }
-        }
-    }
-
-    // temp - del functions
-    public void printFunctionsData(){
-        for (String funcName : functions.keySet()) {
-            LinkedList<FunctionData> funcList = functions.get(funcName);
-            for (FunctionData funcData : funcList) {
-                out.println("Function name: " + funcData.getName());
-                out.println("Arguments:");
-                for (Map.Entry<String, Types> entry : funcData.arguments.entrySet()) {
-                    out.println("    " + entry.getKey() + ": " + entry.getValue());
-                }
-                out.println("Return type: " + funcData.getType());
-                out.println("Return expression: " + funcData.getReturnExpression());
-            }
-            out.println();
-        }
-    }
-
-    public void printAllVariables(){
-        out.println("\nPrinting all Variables:");
-        for (Map.Entry<String, Types> entry : variables.entrySet()) {
-            out.println("Key:" + entry.getKey() + ",Value:" + entry.getValue());
         }
     }
 

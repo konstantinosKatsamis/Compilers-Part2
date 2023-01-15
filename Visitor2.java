@@ -1,6 +1,5 @@
 import java.util.Hashtable;
 
-
 import utils.*;
 import minipython.node.*;
 import static java.lang.System.out;
@@ -59,15 +58,6 @@ public class Visitor2 extends DepthFirstAdapter{
     public void inATypeExpression(ATypeExpression node) {
     }
 
-    // save function's argument model.Types
-    @Override
-    public void outAArglistArglist(AArglistArglist node){
-        // if current function != null we are ok to put the arguments in the correct fynction
-        if (curFunc != null){
-            String fName = curFunc.name;
-        }
-    }
-
     // we found a new FunctionCall so we create a new functionData
     @Override
     public void inAFunctionCall(AFunctionCall node){
@@ -120,14 +110,6 @@ public class Visitor2 extends DepthFirstAdapter{
             }
             // get its type
             f.setType(getExpressionType(f.getReturnExpression()));
-        }
-    }
-
-    // save functions's argument utils.Types
-    @Override
-    public void inAArgument(AArgument node){
-        if(curFunc != null){
-            //curFunc.args.add(getExpressionType(node.getId2().toString()));
         }
     }
 
@@ -302,42 +284,6 @@ public class Visitor2 extends DepthFirstAdapter{
     private void notDefined(int line, String type, String name)
     {
         System.err.println("Error: Line " + line + ": " + type + ' ' + name + "is not defined");
-    }
-
-    // Temp del functions
-    public void printFunctionsData(){
-        out.println("\nFunctions decleared in the program:");
-        for (String funcName : functions.keySet()) {
-            LinkedList<FunctionData> funcList = functions.get(funcName);
-            for (FunctionData funcData : funcList) {
-                out.println("Function name: " + funcData.getName());
-                out.println("Arguments - " + funcData.arguments.size() + " | Default args - " + funcData.getDefaultArguments() + " | Non Default args - " + funcData.getNonDefaultArguments());
-                for (Map.Entry<String, Types> entry : funcData.arguments.entrySet()) {
-                    out.println("    " + entry.getKey() + ": " + entry.getValue());
-                }
-                out.println("Return type: " + funcData.getType());
-                out.println("Return expression: " + funcData.getReturnExpression());
-            }
-            out.println();
-        }
-    }
-
-    public void printFunctionCalls(){
-        out.println("\nCalls of functions in the program:");
-        for (String funcName : functionCalls.keySet()) {
-            FunctionCalls func = functionCalls.get(funcName);
-            out.println("Function name: " + funcName);
-            out.println("Number of calls: " + func.getCalls());
-            out.println("Call locations:");
-            func.printArguments();
-        }
-    }
-
-    public void printAllVariables(){
-        out.println("\nPrinting all Variables:");
-        for (Map.Entry<String, Types> entry : variables.entrySet()) {
-            out.println("Key:" + entry.getKey() + ",Value:" + entry.getValue());
-        }
     }
 
 }
