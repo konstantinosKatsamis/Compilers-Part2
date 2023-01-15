@@ -83,7 +83,6 @@ public class Visitor1 extends DepthFirstAdapter{
         }catch(Exception e){
             out.println("EXCEPTION outAFunction");
         }
-        // printFunctionsData();
     }
 
     // we found a new FunctionCall so we create a new functionData
@@ -94,9 +93,6 @@ public class Visitor1 extends DepthFirstAdapter{
 
     @Override
     public void outAFunctionCall(AFunctionCall node){
-        // printFunctionsData(); out.println();
-        // printAllVariables(); out.println();
-        
         FunctionData f = getFunctionData(node, true);
         if(f != null){
             // get its type
@@ -110,11 +106,8 @@ public class Visitor1 extends DepthFirstAdapter{
                 String key = entry.getKey();
                 Types value = entry.getValue();
                 // out.println("Key: " + key + ", Value: " + value);
-                // out.println("i have the " + key + ": " + variables.containsKey(key));
                 variables.replace(key, type);
             }
-            // printFunctionsData();
-            // printAllVariables(); out.println();
             updateFunctionsVariables();
         }
     }
@@ -131,23 +124,6 @@ public class Visitor1 extends DepthFirstAdapter{
             FunctionData f = getFunctionData(((AFunctionCall) ((AFuncCallExpression) node).getFunctionCall()), false);
             return f == null ? Types.NUMERIC : f.getType();
         }
-        // else if (node instanceof AIdentifierExpression)
-        // {
-        //     TIdentifier id = ((AIdentifierExpression) node.getIdentifier();
-        //     if (!checkVariableDefinition(id, false))
-        //     {
-        //         return Types.NAN;
-        //     }
-        //     return variables.get(id.toString());
-        // } else if (node instanceof AAssignListStatement)
-        // {
-        //     TId id = ((AAssignListStatement) node).getId();
-        //     if (!checkVariableDefinition(id, false))
-        //     {
-        //         return Types.NAN;
-        //     }
-        //     return variables.get(id.toString());
-        // }
         //If its nothing of the above then it must be NUMERIC
         else
         {
@@ -183,7 +159,7 @@ public class Visitor1 extends DepthFirstAdapter{
                 }
             }
             //If nothing found print an error
-            System.err.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA2Error: Line " + node.getIdentifier().getLine() + ": Arguments for function " + curFunc.name + " do not match any overload");
+            System.err.println("Error: Line " + node.getIdentifier().getLine() + ": Arguments for function " + curFunc.name + " do not match any overload");
         }
         return null;
     }
@@ -191,27 +167,23 @@ public class Visitor1 extends DepthFirstAdapter{
     private void alreadyDefinedFunction(int line, String name)
 	{
 		name = name.substring(0, name.lastIndexOf(' '));
-		System.err.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA3Error: Line " + line + ": " + "Function" + ' ' + name + " is already defined!");
+		System.err.println("Error: Line " + line + ": " + "Function" + ' ' + name + " is already defined!");
 	}
 
     // keep the expression of the return statement
     @Override
     public void inAReturnStatement(AReturnStatement node){
-        // out.println("inAReturnStatement: Function name = " + currentFunc.getName() + ", ReturnStatement = " +  node.getExpression());
-        currentFunc.setReturnExpression(node.getExpression());
-        PExpression pexpr =  node.getExpression();
-        
+        currentFunc.setReturnExpression(node.getExpression());        
     }
 
     @Override
     public void outAArgument(AArgument node) {
-        // out.println("outAArgument");
+        out.println("outAArgument");
     }
 
     @Override
     public void inAArgument(AArgument node){
-        // out.println("inAArgument");
-        // LinkedList<> lls =  node.getId2();
+        out.println("INAArgument");
     }
 
     public Types getValueType(PValue value)
@@ -238,16 +210,12 @@ public class Visitor1 extends DepthFirstAdapter{
         for (String funcName : functions.keySet()) {
             LinkedList<FunctionData> funcList = functions.get(funcName);
             for (FunctionData funcData : funcList) {
-                // out.println("prin to update:");
-                // funcData.printArguments(); out.println();
                 for (Map.Entry<String, Types> entry : funcData.arguments.entrySet()) {
                     if(variables.containsKey(entry.getKey())){
                         Types value = variables.get(entry.getKey());
                         funcData.arguments.replace(entry.getKey(), value);
                     }
                 }
-                // out.println("\nmeta to update:");
-                // funcData.printArguments(); out.println();
             }
         }
     }

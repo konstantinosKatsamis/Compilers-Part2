@@ -16,7 +16,6 @@ public class Visitor2 extends DepthFirstAdapter{
     private Hashtable<String, Types> variables;
 
     private FunctionCalls curFunc = null;
-    // private boolean inPrint = false; del
     private boolean inReturn = false;
     private int curLine = 0;
 
@@ -25,7 +24,6 @@ public class Visitor2 extends DepthFirstAdapter{
         this.functions = functions;
         this.variables = vars;
         this.functionCalls = functionCalls;
-        // printFunctionsData();
     }
 
     // we just found a use of a identifier so we check if it has been decleared
@@ -84,7 +82,7 @@ public class Visitor2 extends DepthFirstAdapter{
         if(f != null){
             TIdentifier tIdentline =  node.getIdentifier();
             int line = tIdentline.getLine();
-            Types returnType = f.getType();   // out.println(f.getType()); // kserw oti eshei sosto tipo epistrofis
+            Types returnType = f.getType();
             
             // print error if the rumber of the args is wrong
             int argsOfFuncCall = node.getExpression().size();
@@ -202,23 +200,7 @@ public class Visitor2 extends DepthFirstAdapter{
         {
             FunctionData f = getFunctionData(((AFunctionCall) ((AFuncCallExpression) node).getFunctionCall()), false);
             return f == null ? Types.NUMERIC : f.getType();
-        } /*else if (node instanceof AIdentifierExpression)
-        {
-            TIdentifier id = ((AIdentifierExpression) node.getIdentifier();
-            if (!checkVariableDefinition(id, false))
-            {
-                return Types.NAN;
-            }
-            return variables.get(id.toString());
-        } else if (node instanceof AAssignListStatement)
-        {
-            TId id = ((AAssignListStatement) node).getId();
-            if (!checkVariableDefinition(id, false))
-            {
-                return Types.NAN;
-            }
-            return variables.get(id.toString());
-        }*/
+        }
         //If its nothing of the above then it must be NUMERIC
         else
         {
@@ -249,7 +231,7 @@ public class Visitor2 extends DepthFirstAdapter{
                 }
             }
             //If nothing found print an error
-            System.err.println("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE1rror: Line " + node.getIdentifier().getLine() + ": Arguments for function " + curFunc.name + " do not match any overload");
+            System.err.println("Error: Line " + node.getIdentifier().getLine() + ": Arguments for function " + curFunc.name + " do not match any overload");
         }
         return null;
     }
@@ -319,7 +301,7 @@ public class Visitor2 extends DepthFirstAdapter{
 
     private void notDefined(int line, String type, String name)
     {
-        System.err.println("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE2rror: Line " + line + ": " + type + ' ' + name + "is not defined");
+        System.err.println("Error: Line " + line + ": " + type + ' ' + name + "is not defined");
     }
 
     // Temp del functions
