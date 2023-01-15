@@ -27,3 +27,9 @@ print add2(1, k)
 def add(x,y):
     return "hello world"
 print add(2,1)+2
+
+# other test
+def add(x,y):
+    return "x + y"
+
+print add("1", "2") + 1

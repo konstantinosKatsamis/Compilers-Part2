@@ -1,14 +1,10 @@
 
 
-k=12
+
 
 # simio 5:
 # x = 5 + None # touto doulefkei
 # print type(x) + 4.5 # EXOUME THEMA ME TOUTO
-
-# simio 4: xrisi metavlitis diaforetikou tipou
-
-
 
 
 # simio 3: lathos orismos orismatwn:
@@ -18,7 +14,15 @@ k=12
 
 
 
-def add(x,y=2):
+
+def add(x,y):
     return x + y
 
-print add(1, 2, 3)
+def add(x,y,z=1):
+    return x + y + z
+
+
+
+
+
+

@@ -115,23 +115,24 @@ public class Visitor1 extends DepthFirstAdapter{
         {
             FunctionData f = getFunctionData(((AFunctionCall) ((AFuncCallExpression) node).getFunctionCall()), false);
             return f == null ? Types.NUMERIC : f.getType();
-        } /*else if (node instanceof AIdentifierExpression)
-        {
-            TIdentifier id = ((AIdentifierExpression) node.getIdentifier();
-            if (!checkVariableDefinition(id, false))
-            {
-                return Types.NAN;
-            }
-            return variables.get(id.toString());
-        } else if (node instanceof AAssignListStatement)
-        {
-            TId id = ((AAssignListStatement) node).getId();
-            if (!checkVariableDefinition(id, false))
-            {
-                return Types.NAN;
-            }
-            return variables.get(id.toString());
-        }*/
+        }
+        // else if (node instanceof AIdentifierExpression)
+        // {
+        //     TIdentifier id = ((AIdentifierExpression) node.getIdentifier();
+        //     if (!checkVariableDefinition(id, false))
+        //     {
+        //         return Types.NAN;
+        //     }
+        //     return variables.get(id.toString());
+        // } else if (node instanceof AAssignListStatement)
+        // {
+        //     TId id = ((AAssignListStatement) node).getId();
+        //     if (!checkVariableDefinition(id, false))
+        //     {
+        //         return Types.NAN;
+        //     }
+        //     return variables.get(id.toString());
+        // }
         //If its nothing of the above then it must be NUMERIC
         else
         {

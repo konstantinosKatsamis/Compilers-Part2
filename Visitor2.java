@@ -80,31 +80,31 @@ public class Visitor2 extends DepthFirstAdapter{
     public void outAFunctionCall(AFunctionCall node){
         // get functionData
         FunctionData f = getFunctionData(node, true);
-        TIdentifier tIdentline =  node.getIdentifier();
-        int line = tIdentline.getLine();  // out.println(f.getName()); // kserw oti ekalesen th sosth methodo
-        Types returnType = f.getType();   // out.println(f.getType()); // kserw oti eshei sosto tipo epistrofis
-        
-        // for each argument of a function call
-        Object [] strArr = node.getExpression().toArray();
-        for(Object s: strArr){
-            String he = s.toString();
-            he = he.trim();
-            if(variables.containsKey(s.toString())){
-                Types valuehe = variables.get(s.toString());
-                if(returnType != valuehe){
-                    functionCallError( Integer.toString(line), f.getName(), returnType.toString(), valuehe.toString());
+        if(f != null){
+            TIdentifier tIdentline =  node.getIdentifier();
+            int line = tIdentline.getLine();  // out.println(f.getName()); // kserw oti ekalesen th sosth methodo
+            Types returnType = f.getType();   // out.println(f.getType()); // kserw oti eshei sosto tipo epistrofis
+            // for each argument of a function call
+            Object [] strArr = node.getExpression().toArray();
+            for(Object s: strArr){
+                String he = s.toString();
+                he = he.trim();
+                if(variables.containsKey(s.toString())){
+                    Types valuehe = variables.get(s.toString());
+                    if(returnType != valuehe){
+                        functionCallError( Integer.toString(line), f.getName(), returnType.toString(), valuehe.toString());
+                    }
                 }
+                // check a number argument
+                if(he.matches("[-+]?[0-9]*\\.?[0-9]+") && returnType == Types.STRING){
+                    functionCallError( Integer.toString(line), f.getName(), returnType.toString(), "NUMERIC");
+                }
+                // check a String argument
+                // ??
             }
-            // check a number argument
-            if(he.matches("[-+]?[0-9]*\\.?[0-9]+") && returnType == Types.STRING){
-                functionCallError( Integer.toString(line), f.getName(), returnType.toString(), "NUMERIC");
-            }
-            // check a String argument
-            // ??
-        }
         
               
-        if(f != null){
+        
             // make String array of all parameter names of found function that we are calling
             String [] fTypes = f.arguments.keySet().toArray(new String[f.arguments.size()]);
             // For each parameter see its type equal to the functioncall parameter types
