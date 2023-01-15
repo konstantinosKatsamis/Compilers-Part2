@@ -7,11 +7,7 @@ k=12
 # print type(x) + 4.5 # EXOUME THEMA ME TOUTO
 
 # simio 4: xrisi metavlitis diaforetikou tipou
-def add2(x, y):
-    return "1 + 1"
 
-kaaaaaaaaaaaaaaaa = "hello world"
-print add2(1, k)
 
 
 
@@ -22,3 +18,7 @@ print add2(1, k)
 
 
 
+def add(x,y=2):
+    return x + y
+
+print add(1, 2, 3)
