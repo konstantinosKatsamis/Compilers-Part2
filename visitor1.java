@@ -2,7 +2,6 @@
 
 import java.util.*;
 
-import javax.swing.tree.VariableHeightLayoutCache;
 
 import utils.*;
 import java.lang.String;
@@ -45,7 +44,7 @@ public class Visitor1 extends DepthFirstAdapter{
             }
             temp_args.put(i.getIdentifier().toString(), getValueType(i.getValue()));
         }        
-        currentFunc = new FunctionData(node.getIdentifier().toString()); //new FunctionData(node.getId().toString());
+        currentFunc = new FunctionData(node.getIdentifier().toString());
         currentFunc.arguments = temp_args; 
         currentFunc.setDefaultArguments(def_args);               
         currentFunc.setNonDefaultArguments(non_def_args);
@@ -59,7 +58,7 @@ public class Visitor1 extends DepthFirstAdapter{
             // get all functions with same name
             for(FunctionData f: functions.get(currentFunc.getName())){
                 // and check if there is a function with same arguments
-                if((f.getArgumentsSize() == currentFunc.getArgumentsSize())){ // katastrofikos elegxos: f.getArguments() == currentFunc.getArguments())
+                if((f.getArgumentsSize() == currentFunc.getArgumentsSize())){
                     alreadyDefinedFunction(((TIdentifier) node.getIdentifier()).getLine(), currentFunc.getName());
                     return;
                 }
@@ -93,7 +92,7 @@ public class Visitor1 extends DepthFirstAdapter{
 
     @Override
     public void outAFunctionCall(AFunctionCall node){
-        FunctionData f = getFunctionData(node, true);
+        FunctionData f = getFunctionData(node, false);
         if(f != null){
             // get its type
             Types type = getExpressionType(f.getReturnExpression());
@@ -143,7 +142,7 @@ public class Visitor1 extends DepthFirstAdapter{
         {
             if(print)
             {
-                // del notDefined(node.getIdentifier().getLine(), "Function", node.getIdentifier().toString());
+                notDefined(node.getIdentifier().getLine(), "Function", node.getIdentifier().toString());
             }
         }
         else
