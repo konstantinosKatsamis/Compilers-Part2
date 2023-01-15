@@ -142,7 +142,7 @@ public class Visitor1 extends DepthFirstAdapter{
 
     private void notDefined(int line, String type, String name)
     {
-        System.err.println("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEError: Line " + line + ": " + type + ' ' + name + "is not defined");
+        System.err.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA1Error: Line " + line + ": " + type + ' ' + name + "is not defined");
     }
 
     private FunctionData getFunctionData(AFunctionCall node, boolean print)
@@ -152,7 +152,7 @@ public class Visitor1 extends DepthFirstAdapter{
         {
             if(print)
             {
-                notDefined(node.getIdentifier().getLine(), "Function", node.getIdentifier().toString());
+                // del notDefined(node.getIdentifier().getLine(), "Function", node.getIdentifier().toString());
             }
         }
         else
@@ -168,7 +168,7 @@ public class Visitor1 extends DepthFirstAdapter{
                 }
             }
             //If nothing found print an error
-            System.err.println("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEError: Line " + node.getIdentifier().getLine() + ": Arguments for function " + curFunc.name + " do not match any overload");
+            System.err.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA2Error: Line " + node.getIdentifier().getLine() + ": Arguments for function " + curFunc.name + " do not match any overload");
         }
         return null;
     }
@@ -176,7 +176,7 @@ public class Visitor1 extends DepthFirstAdapter{
     private void alreadyDefinedFunction(int line, String name)
 	{
 		name = name.substring(0, name.lastIndexOf(' '));
-		System.err.println("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEError: Line " + line + ": " + "Function" + ' ' + name + " is already defined!");
+		System.err.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA3Error: Line " + line + ": " + "Function" + ' ' + name + " is already defined!");
 	}
 
     // keep the expression of the return statement

@@ -240,7 +240,7 @@ public class Visitor2 extends DepthFirstAdapter{
                 }
             }
             //If nothing found print an error
-            System.err.println("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEError: Line " + node.getIdentifier().getLine() + ": Arguments for function " + curFunc.name + " do not match any overload");
+            System.err.println("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE1rror: Line " + node.getIdentifier().getLine() + ": Arguments for function " + curFunc.name + " do not match any overload");
         }
         return null;
     }
@@ -302,7 +302,7 @@ public class Visitor2 extends DepthFirstAdapter{
 
     private void notDefined(int line, String type, String name)
     {
-        System.err.println("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEError: Line " + line + ": " + type + ' ' + name + "is not defined");
+        System.err.println("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE2rror: Line " + line + ": " + type + ' ' + name + "is not defined");
     }
 
     // Temp del functions
