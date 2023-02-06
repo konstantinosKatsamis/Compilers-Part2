@@ -27,12 +27,14 @@
 # azagira = "1"
 # def add(x,y=2):
 #     return x + y
+
 # print add(1, 2, 3, 4)
 
 # azagira = "1"
 # def add(x, b, y=2):
 #     return x + y
 # print add(1)
+
 
 # def add3(num1, num2=2):
 #    return num1 + num2
@@ -70,14 +72,15 @@
     ##################### 6
 # def add(x,y):
 #     return "hello world"
-# print add(2,1)+2
+# print add(2,1)+2  
+
 
 # def add(x,y):
 #     return x + y
 # print add(2,1)+"a"
 
 
-    ##################### 7
+    #################### 7
 # def add(x,y):
 #     return x + y
 
