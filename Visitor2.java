@@ -34,45 +34,46 @@ public class Visitor2 extends DepthFirstAdapter{
     // we just found a use of a identifier so we check if it has been decleared
     @Override
     public void inAIdentifierExpression(AIdentifierExpression node){
+        out.println("inAIdentifierExpression");
         checkVariableDefinition(node.getIdentifier(), true);
     }
 
     // declear a new variable. we need to keep track of what value type ti is
     @Override
     public void inAAssignStatement(AAssignStatement node){
+        out.println("inAAssignStatement");
         String vName = node.getIdentifier().toString();
         variables.put(vName, getExpressionType(node.getExpression()));
     }
 
     // we declear a new list so we need to keep track of what value type it is
-    @Override
+    /*@Override
     public void inAAssignListStatement(AAssignListStatement node){
+        out.println("inAAssignListStatement");
         String vName = node.getIdentifier().toString();
         variables.put(vName, getExpressionType(node.getEx1()));
-    }
+    }*/
 
     // save function's argument model.Types temprarly
-    @Override
+    /*@Override
     public void inAArglistArglist(AArglistArglist node){
-        if(curFunc != null)
-        {
+        out.println("inAArglistArglist");
+        if(curFunc != null){
             curFunc.args.add(getExpressionType(node.getExpression()));
         }
-    }
-
-    @Override
-    public void inATypeExpression(ATypeExpression node) {
-    }
+    }*/
 
     // we found a new FunctionCall so we create a new functionData
     @Override
     public void inAFunctionCall(AFunctionCall node){
+        out.println("inAFunctionCall");
         curFunc = new FunctionCalls(node.getIdentifier().toString());
     }
 
     // we leaving the function call so we need to check if the arguments are correct and get its return type
     @Override
     public void outAFunctionCall(AFunctionCall node){
+        out.println("outAFunctionCall");
         // get functionData
         FunctionData f = getFunctionData(node, true);
         if(f != null){
@@ -122,43 +123,37 @@ public class Visitor2 extends DepthFirstAdapter{
     // for every arithmetic like +, -, *, /, **
     @Override
     public void outAArithmeticExpression(AArithmeticExpression node){
+        out.println("outAArithmeticExpression");
         PExpression a = node.getExpr1();
         PExpression b = node.getExpr2();
         getOperationType(a, b);
     }
 
-    private void getOperationType(PExpression a, PExpression b)
-    {
+    private void getOperationType(PExpression a, PExpression b){
+        out.println("getOperationType");
         //If we are in a return statement ignore the check since we don't know what each variable might be
-        if (!inReturn)
-        {
+        if (!inReturn){
             Types at, bt;
             //Get a Type
-            if (variables.containsKey(a.toString()))
-            {
+            if (variables.containsKey(a.toString())){
                 at = variables.get(a.toString());
-            } else
-            {
+            } else{
                 at = getExpressionType(a);
             }
 
             //Get b Type
-            if (variables.containsKey(b.toString()))
-            {
+            if (variables.containsKey(b.toString())){
                 bt = variables.get(b.toString());
-            } else
-            {
+            } else{
                 bt = getExpressionType(b);
             }
 
             //If model.Types are the both Numeric or NAN it's fine
-            if ((at == Types.NUMERIC && bt == Types.NUMERIC) || (at == Types.NAN && bt == Types.NAN))
-            {
+            if ((at == Types.NUMERIC && bt == Types.NUMERIC) || (at == Types.NAN && bt == Types.NAN)){
                 variables.put(a.parent().toString(), at);
             }
             //Else print error and set it's type as Numeric to avoid further errors
-            else
-            {
+            else{
                 System.err.println(String.format("Line %d: Numeric operations cannot be performed between %s type and %s type", curLine, at.toString(), bt.toString()));
                 variables.put(a.parent().toString(), Types.NUMERIC);
             }
@@ -168,52 +163,46 @@ public class Visitor2 extends DepthFirstAdapter{
     // when we are in return statement
     @Override
     public void inAReturnStatement(AReturnStatement node){
+        out.println("inAReturnStatement");
         inReturn = true;
     }
 
     @Override
-    public void outAReturnStatement(AReturnStatement node)
-    {
+    public void outAReturnStatement(AReturnStatement node){
+        out.println("outAReturnStatement");
         inReturn = false;
     }
 
-    private Types getExpressionType(PExpression node)
-    {
+    private Types getExpressionType(PExpression node){
+        out.println("getExpressionType");
         //Cast node to the appropriate PExpression and then return its type
-        if (node instanceof AValueExpression)
-        {
+        if (node instanceof AValueExpression){
             PValue value = ((AValueExpression) node).getValue();
             return getValueType(value);
-        } else if (node instanceof AFuncCallExpression)
-        {
+        } else if (node instanceof AFuncCallExpression){
             FunctionData f = getFunctionData(((AFunctionCall) ((AFuncCallExpression) node).getFunctionCall()), false);
             return f == null ? Types.NUMERIC : f.getType();
         }
         //If its nothing of the above then it must be NUMERIC
-        else
-        {
+        else{
             return Types.NUMERIC;
         }
     }
 
-    private FunctionData getFunctionData(AFunctionCall node, boolean print)
-    {
+    private FunctionData getFunctionData(AFunctionCall node, boolean print){
+        out.println("getFunctionData");
         //if we cannot find it then print error
-        if(!functions.containsKey(node.getIdentifier().toString()))
-        {
+        if(!functions.containsKey(node.getIdentifier().toString())){
             if(print)
             {
                 notDefined(node.getIdentifier().getLine(), "Function", node.getIdentifier().toString());
             }
         }
-        else
-        {
+        else{
             //Check all function with same name
-            for(FunctionData f : functions.get(node.getIdentifier().toString()))
-            {
+            for(FunctionData f : functions.get(node.getIdentifier().toString())){
                 //If they have the same parameters then we are calling this one so return it
-                if(f.arguments.size() >= curFunc.args.size() && f.getArguments() <= curFunc.args.size())
-                {
+                if(f.arguments.size() >= curFunc.args.size() && f.getArguments() <= curFunc.args.size()){
                     f.setType(getExpressionType(f.getReturnExpression()));
                     return f;
                 }
@@ -224,28 +213,25 @@ public class Visitor2 extends DepthFirstAdapter{
         return null;
     }
 
-    public Types getValueType(PValue value)
-    {
-        if(value instanceof AStringValue)
-        {
+    public Types getValueType(PValue value){
+        out.println("getValueType");
+        if(value instanceof AStringValue){
             return Types.STRING;
         }
-        else if (value instanceof ANoneValue)
-        {
+        else if (value instanceof ANoneValue){
             return Types.NULL;
         }
-        else if(value instanceof AMethodValue)
-        {
+        else if(value instanceof AMethodValue){
             String retFunc = ((AMethodValue) value).getIdentifier().toString();
             return variables.get(retFunc);
         }
-        else
-        {
+        else{
             return Types.NUMERIC;
         }
     }
 
     private boolean checkVariableDefinition(TIdentifier node, boolean print){
+        out.println("checkVariableDefinition");
         String vName = node.toString();
         for (String funcName : functions.keySet()) {
             LinkedList<FunctionData> funcList = functions.get(funcName);
@@ -261,10 +247,8 @@ public class Visitor2 extends DepthFirstAdapter{
             }
         }
 
-        if (!variables.containsKey(vName))
-        {
-            if(print)
-            {
+        if (!variables.containsKey(vName)){
+            if(print){
                 int line = node.getLine();
                 
                 notDefined(line, "Variable", vName);
@@ -276,10 +260,12 @@ public class Visitor2 extends DepthFirstAdapter{
     }
 
     private void functionCallErrorType(String line, String funcName, String correctType, String wrongType){
+        out.println("functionCallErrorType");
         System.err.println("Error: Line " + line + ": Function " + funcName + "takes " + correctType + " arguments. No " + wrongType);
     }
     
     private void functionCallErrorArgsNumber(int bit, String line, String funcName, int originalArgs, int givenArgs){
+        out.println("functionCallErrorArgsNumber");
         if(bit == 0){
             System.err.println("Error: Line " + line + ": Function " + funcName + "takes " + originalArgs + " arguments. No " + givenArgs);
         } else{
@@ -287,8 +273,8 @@ public class Visitor2 extends DepthFirstAdapter{
         }
     }
 
-    private void notDefined(int line, String type, String name)
-    {
+    private void notDefined(int line, String type, String name){
+        out.println("notDefined");
         System.err.println("Error: Line " + line + ": " + type + ' ' + name + "is not defined");
     }
 
