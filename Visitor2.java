@@ -15,6 +15,11 @@ import minipython.analysis.DepthFirstAdapter;
 import utils.FunctionData;
 import utils.Types;
 
+/*
+ * Visitor1, takes saved data from Visitor1 and:
+ * Saves data and checks function calls, declaretions variables, arithmetic operations
+ */
+
 public class Visitor2 extends DepthFirstAdapter{
     private Hashtable<String, LinkedList<FunctionData>> functions;
     private Hashtable<String, FunctionCalls> functionCalls;
@@ -31,26 +36,27 @@ public class Visitor2 extends DepthFirstAdapter{
         this.functionCalls = functionCalls;
     }
 
-    // we just found a use of a identifier so we check if it has been decleared
+    // new use of identifier(in a Identifier) => check for correct definition
     @Override
     public void inAIdentifierExpression(AIdentifierExpression node){
         checkVariableDefinition(node.getIdentifier(), true);
     }
 
-    // declear a new variable. we need to keep track of what value type ti is
+    // new use of assign statement(in a Assign Statement) => save its data temporarly
     @Override
     public void inAAssignStatement(AAssignStatement node){
         String vName = node.getIdentifier().toString();
         variables.put(vName, getExpressionType(node.getExpression()));
     }
 
-    // we found a new FunctionCall so we create a new functionData
+    // new use of function call statement(in a FunctionCall) => save its data temporarly
     @Override
     public void inAFunctionCall(AFunctionCall node){
         curFunc = new FunctionCalls(node.getIdentifier().toString());
     }
 
-    // we leaving the function call so we need to check if the arguments are correct and get its return type
+    // exit from the new function call(out a FunctionCall) => save its and checks for problems(e.g. if is already decleared,
+    // number and type of arguments)
     @Override
     public void outAFunctionCall(AFunctionCall node){
         // get functionData
@@ -98,7 +104,7 @@ public class Visitor2 extends DepthFirstAdapter{
         }
     }
 
-    // for every arithmetic like +, -, *, /, **
+    // exit from arithmetic expression(out a ArithmeticExpression) => check if the expression is correct
     @Override
     public void outAArithmeticExpression(AArithmeticExpression node){
         PExpression a = node.getExpr1();
@@ -106,49 +112,45 @@ public class Visitor2 extends DepthFirstAdapter{
         getOperationType(a, b);
     }
 
+    // check and update variables' type by
     private void getOperationType(PExpression a, PExpression b){
-        //If we are in a return statement ignore the check since we don't know what each variable might be
         if (!inReturn){
             Types at, bt;
-            //Get a Type
             if (variables.containsKey(a.toString())){
                 at = variables.get(a.toString());
             } else{
                 at = getExpressionType(a);
             }
 
-            //Get b Type
             if (variables.containsKey(b.toString())){
                 bt = variables.get(b.toString());
             } else{
                 bt = getExpressionType(b);
             }
 
-            //If model.Types are the both Numeric or NAN it's fine
             if ((at == Types.NUMERIC && bt == Types.NUMERIC) || (at == Types.NAN && bt == Types.NAN)){
                 variables.put(a.parent().toString(), at);
-            }
-            //Else print error and set it's type as Numeric to avoid further errors
-            else{
+            } else{
                 System.err.println(String.format("Line %d: Numeric operations cannot be performed between %s type and %s type", curLine, at.toString(), bt.toString()));
                 variables.put(a.parent().toString(), Types.NUMERIC);
             }
         }
     }
 
-    // when we are in return statement
+    // new use of return statement(in a ReturnStatement) => set true the temporary variable
     @Override
     public void inAReturnStatement(AReturnStatement node){
         inReturn = true;
     }
 
+    // exit from return statement(out a ReturnStatement) => set false the temporary variable
     @Override
     public void outAReturnStatement(AReturnStatement node){
         inReturn = false;
     }
 
+    // returns the expression type of a PExpression node
     private Types getExpressionType(PExpression node){
-        //Cast node to the appropriate PExpression and then return its type
         if (node instanceof AValueExpression){
             PValue value = ((AValueExpression) node).getValue();
             return getValueType(value);
@@ -156,21 +158,19 @@ public class Visitor2 extends DepthFirstAdapter{
             FunctionData f = getFunctionData(((AFunctionCall) ((AFuncCallExpression) node).getFunctionCall()), false);
             return f == null ? Types.NUMERIC : f.getType();
         }
-        //If its nothing of the above then it must be NUMERIC
-        else{
+        else {
             return Types.NUMERIC;
         }
     }
 
+    // exit from the function call(out a FunctionCall) => save its and checks for problems
     private FunctionData getFunctionData(AFunctionCall node, boolean print){
-        //if we cannot find it then print error
         if(!functions.containsKey(node.getIdentifier().toString())){
             if(print){
                 notDefined(node.getIdentifier().getLine(), "Function", node.getIdentifier().toString());
             }
         }
-        else{
-            //Check all function with same name
+        else {
             for(FunctionData f : functions.get(node.getIdentifier().toString())){
                 //If they have the same parameters then we are calling this one so return it
                 if(f.arguments.size() >= curFunc.args.size() && f.getArguments() <= curFunc.args.size()){
@@ -178,12 +178,12 @@ public class Visitor2 extends DepthFirstAdapter{
                     return f;
                 }
             }
-            //If nothing found print an error
             System.err.println("Error: Line " + node.getIdentifier().getLine() + ": Arguments for function " + curFunc.name + " do not match any overload");
         }
         return null;
     }
 
+    // function for get the type of a value
     public Types getValueType(PValue value){
         if(value instanceof AStringValue){
             return Types.STRING;
@@ -200,6 +200,7 @@ public class Visitor2 extends DepthFirstAdapter{
         }
     }
 
+    // check of variables's definition
     private boolean checkVariableDefinition(TIdentifier node, boolean print){
         String vName = node.toString();
         for (String funcName : functions.keySet()) {
@@ -227,10 +228,12 @@ public class Visitor2 extends DepthFirstAdapter{
         return true;
     }
 
+    // function for error
     private void functionCallErrorType(String line, String funcName, String correctType, String wrongType){
         System.err.println("Error: Line " + line + ": Function " + funcName + "takes " + correctType + " arguments. No " + wrongType);
     }
     
+    // function for error
     private void functionCallErrorArgsNumber(int bit, String line, String funcName, int originalArgs, int givenArgs){
         if(bit == 0){
             System.err.println("Error: Line " + line + ": Function " + funcName + "takes " + originalArgs + " arguments. No " + givenArgs);
@@ -239,6 +242,7 @@ public class Visitor2 extends DepthFirstAdapter{
         }
     }
 
+    // function for error
     private void notDefined(int line, String type, String name){
         System.err.println("Error: Line " + line + ": " + type + ' ' + name + "is not defined");
     }

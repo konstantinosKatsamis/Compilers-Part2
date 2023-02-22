@@ -5,15 +5,20 @@
 */
 
 import java.util.*;
-
 import utils.*;
 import java.lang.String;
 import static java.lang.System.out;
-
 import minipython.analysis.DepthFirstAdapter;
 import utils.FunctionData;
 import utils.Types;
 import minipython.node.*;
+
+/**
+ * Visitor1, saves function's and variables's data
+ * Prints errors about wrong function declaretions
+ * Every inXXX function is used when we got in a situation(declaretion of function, call of function)
+ * Every outXXX function is used when we got out from a situation
+ */
 
 public class Visitor1 extends DepthFirstAdapter{
     private Hashtable<String, LinkedList<FunctionData>> functions;
@@ -27,7 +32,7 @@ public class Visitor1 extends DepthFirstAdapter{
         this.variables = variables;
     }
     
-    // we got in a new function, so we create a new FunctionData object
+    // new function(in a function) => save its data temporarly
     @Override
     public void inAFunction(AFunction node){
         Hashtable<String, Types> temp_args = new Hashtable<>();
@@ -52,14 +57,11 @@ public class Visitor1 extends DepthFirstAdapter{
         currentFunc.setNonDefaultArguments(non_def_args);
     }
 
-    // exit the function declaretion. collect all required info and check for duplicates
+    // exit from the new function(out a function) => save its and checks for problems(e.g. if is already decleared)
     @Override
     public void outAFunction(AFunction node){
-        // if other function exist with the same name
         if(functions.containsKey(currentFunc.getName())){
-            // get all functions with same name
             for(FunctionData f: functions.get(currentFunc.getName())){
-                // check function's arguments
                 if((f.getArgumentsSize() == currentFunc.getArgumentsSize())){
                     alreadyDefinedFunction(((TIdentifier) node.getIdentifier()).getLine(), currentFunc.getName());
                     return;
@@ -86,18 +88,18 @@ public class Visitor1 extends DepthFirstAdapter{
         }
     }
 
-    // we found a new FunctionCall so we create a new functionData
+    // new function call(in a FunctionCall) => save its data temporarly
     @Override
     public void inAFunctionCall(AFunctionCall node){
         curFunc = new FunctionCalls(node.getIdentifier().toString());
     }
 
+    // exit from the function call(out a FunctionCall) => save its and checks for problems
     @Override
     public void outAFunctionCall(AFunctionCall node){
         FunctionData f = getFunctionData(node, false);
         if(f != null){
             Types type = getExpressionType(f.getReturnExpression());
-            // out.println("Type of function: " + type);
             f.setType(getExpressionType(f.getReturnExpression()));
             Hashtable<String, Types> tempArgs = f.getArgumHashtable();
 
@@ -110,9 +112,9 @@ public class Visitor1 extends DepthFirstAdapter{
         }
     }
 
+    // function that returns the type of expression
     private Types getExpressionType(PExpression node)
     {
-        //Cast node to the appropriate PExpression and then return its type
         if (node instanceof AValueExpression){
             PValue value = ((AValueExpression) node).getValue();
             return getValueType(value);
@@ -120,49 +122,48 @@ public class Visitor1 extends DepthFirstAdapter{
             FunctionData f = getFunctionData(((AFunctionCall) ((AFuncCallExpression) node).getFunctionCall()), false);
             return f == null ? Types.NUMERIC : f.getType();
         }
-        //If its nothing of the above then it must be NUMERIC
         else{
             return Types.NUMERIC;
         }
     }
 
+    // function for error
     private void notDefined(int line, String type, String name){
         System.err.println("Error: Line " + line + ": " + type + ' ' + name + "is not defined");
     }
 
+    // function that's returns the data of a given function node
     private FunctionData getFunctionData(AFunctionCall node, boolean print){
-        //if we cannot find it then print error
         if(!functions.containsKey(node.getIdentifier().toString())){
             if(print){
                 notDefined(node.getIdentifier().getLine(), "Function", node.getIdentifier().toString());
             }
         }
         else{
-            //Check all function with same name
             for(FunctionData f : functions.get(node.getIdentifier().toString())){
-                //If they have the same parameters then we are calling this one so return it
                 if(f.arguments.size() >= curFunc.args.size() && f.getArguments() <= curFunc.args.size()){
                     f.setType(getExpressionType(f.getReturnExpression()));
                     return f;
                 }
             }
-            //If nothing found print an error
             System.err.println("Error: Line " + node.getIdentifier().getLine() + ": Arguments for function " + curFunc.name + " do not match any overload");
         }
         return null;
     }
 
+    // function for error
     private void alreadyDefinedFunction(int line, String name){
 		name = name.substring(0, name.lastIndexOf(' '));
 		System.err.println("Error: Line " + line + ": " + "Function" + ' ' + name + " is already defined!");
 	}
 
-    // keep the expression of the return statement
+    // new return statement(in a Return Statement) => save its data temporarly
     @Override
     public void inAReturnStatement(AReturnStatement node){
         currentFunc.setReturnExpression(node.getExpression());        
     }
 
+    // function for get the type of a value
     public Types getValueType(PValue value){
         if(value instanceof AStringValue){
             return Types.STRING;
@@ -182,6 +183,7 @@ public class Visitor1 extends DepthFirstAdapter{
         }
     }
 
+    // function which updates the variables of a function
     private void updateFunctionsVariables(){
         for (String funcName : functions.keySet()) {
             LinkedList<FunctionData> funcList = functions.get(funcName);
