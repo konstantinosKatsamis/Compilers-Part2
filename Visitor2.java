@@ -34,46 +34,25 @@ public class Visitor2 extends DepthFirstAdapter{
     // we just found a use of a identifier so we check if it has been decleared
     @Override
     public void inAIdentifierExpression(AIdentifierExpression node){
-        out.println("inAIdentifierExpression");
         checkVariableDefinition(node.getIdentifier(), true);
     }
 
     // declear a new variable. we need to keep track of what value type ti is
     @Override
     public void inAAssignStatement(AAssignStatement node){
-        out.println("inAAssignStatement");
         String vName = node.getIdentifier().toString();
         variables.put(vName, getExpressionType(node.getExpression()));
     }
 
-    // we declear a new list so we need to keep track of what value type it is
-    /*@Override
-    public void inAAssignListStatement(AAssignListStatement node){
-        out.println("inAAssignListStatement");
-        String vName = node.getIdentifier().toString();
-        variables.put(vName, getExpressionType(node.getEx1()));
-    }*/
-
-    // save function's argument model.Types temprarly
-    /*@Override
-    public void inAArglistArglist(AArglistArglist node){
-        out.println("inAArglistArglist");
-        if(curFunc != null){
-            curFunc.args.add(getExpressionType(node.getExpression()));
-        }
-    }*/
-
     // we found a new FunctionCall so we create a new functionData
     @Override
     public void inAFunctionCall(AFunctionCall node){
-        out.println("inAFunctionCall");
         curFunc = new FunctionCalls(node.getIdentifier().toString());
     }
 
     // we leaving the function call so we need to check if the arguments are correct and get its return type
     @Override
     public void outAFunctionCall(AFunctionCall node){
-        out.println("outAFunctionCall");
         // get functionData
         FunctionData f = getFunctionData(node, true);
         if(f != null){
@@ -91,8 +70,7 @@ public class Visitor2 extends DepthFirstAdapter{
                 functionCallErrorArgsNumber(1, Integer.toString(line), f.getName(), f.getNonDefaultArguments(), argsOfFuncCall);
             }
 
-            // print error if the given arg has wrong type
-            // for each argument of a function call
+            // print error if the given arg has wrong type for each argument of a function call
             Object [] strArr = node.getExpression().toArray();
             for(Object s: strArr){
                 String he = s.toString();
@@ -123,14 +101,12 @@ public class Visitor2 extends DepthFirstAdapter{
     // for every arithmetic like +, -, *, /, **
     @Override
     public void outAArithmeticExpression(AArithmeticExpression node){
-        out.println("outAArithmeticExpression");
         PExpression a = node.getExpr1();
         PExpression b = node.getExpr2();
         getOperationType(a, b);
     }
 
     private void getOperationType(PExpression a, PExpression b){
-        out.println("getOperationType");
         //If we are in a return statement ignore the check since we don't know what each variable might be
         if (!inReturn){
             Types at, bt;
@@ -163,18 +139,15 @@ public class Visitor2 extends DepthFirstAdapter{
     // when we are in return statement
     @Override
     public void inAReturnStatement(AReturnStatement node){
-        out.println("inAReturnStatement");
         inReturn = true;
     }
 
     @Override
     public void outAReturnStatement(AReturnStatement node){
-        out.println("outAReturnStatement");
         inReturn = false;
     }
 
     private Types getExpressionType(PExpression node){
-        out.println("getExpressionType");
         //Cast node to the appropriate PExpression and then return its type
         if (node instanceof AValueExpression){
             PValue value = ((AValueExpression) node).getValue();
@@ -190,11 +163,9 @@ public class Visitor2 extends DepthFirstAdapter{
     }
 
     private FunctionData getFunctionData(AFunctionCall node, boolean print){
-        out.println("getFunctionData");
         //if we cannot find it then print error
         if(!functions.containsKey(node.getIdentifier().toString())){
-            if(print)
-            {
+            if(print){
                 notDefined(node.getIdentifier().getLine(), "Function", node.getIdentifier().toString());
             }
         }
@@ -214,7 +185,6 @@ public class Visitor2 extends DepthFirstAdapter{
     }
 
     public Types getValueType(PValue value){
-        out.println("getValueType");
         if(value instanceof AStringValue){
             return Types.STRING;
         }
@@ -231,7 +201,6 @@ public class Visitor2 extends DepthFirstAdapter{
     }
 
     private boolean checkVariableDefinition(TIdentifier node, boolean print){
-        out.println("checkVariableDefinition");
         String vName = node.toString();
         for (String funcName : functions.keySet()) {
             LinkedList<FunctionData> funcList = functions.get(funcName);
@@ -250,7 +219,6 @@ public class Visitor2 extends DepthFirstAdapter{
         if (!variables.containsKey(vName)){
             if(print){
                 int line = node.getLine();
-                
                 notDefined(line, "Variable", vName);
             }
             return false;
@@ -260,12 +228,10 @@ public class Visitor2 extends DepthFirstAdapter{
     }
 
     private void functionCallErrorType(String line, String funcName, String correctType, String wrongType){
-        out.println("functionCallErrorType");
         System.err.println("Error: Line " + line + ": Function " + funcName + "takes " + correctType + " arguments. No " + wrongType);
     }
     
     private void functionCallErrorArgsNumber(int bit, String line, String funcName, int originalArgs, int givenArgs){
-        out.println("functionCallErrorArgsNumber");
         if(bit == 0){
             System.err.println("Error: Line " + line + ": Function " + funcName + "takes " + originalArgs + " arguments. No " + givenArgs);
         } else{
@@ -274,7 +240,6 @@ public class Visitor2 extends DepthFirstAdapter{
     }
 
     private void notDefined(int line, String type, String name){
-        out.println("notDefined");
         System.err.println("Error: Line " + line + ": " + type + ' ' + name + "is not defined");
     }
 
