@@ -59,7 +59,6 @@ public class Visitor2 extends DepthFirstAdapter{
     // number and type of arguments)
     @Override
     public void outAFunctionCall(AFunctionCall node){
-        // get functionData
         FunctionData f = getFunctionData(node, true);
         if(f != null){
             TIdentifier tIdentline =  node.getIdentifier();
@@ -93,13 +92,10 @@ public class Visitor2 extends DepthFirstAdapter{
                 }
             }
         
-            // make String array of all parameter names of found function that we are calling
             String [] fTypes = f.arguments.keySet().toArray(new String[f.arguments.size()]);
-            // For each parameter see its type equal to the functioncall parameter types
             for(int i=0; i<curFunc.args.size(); i++){
                 variables.put(fTypes[i], curFunc.args.get(i));
             }
-            // get its type
             f.setType(getExpressionType(f.getReturnExpression()));
         }
     }
